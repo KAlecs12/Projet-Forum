@@ -1,0 +1,21 @@
+{
+  "name": "projet-forum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.3.0",
+    "tailwindcss": "^2.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.ytrack.learn.ynov.com/LCARMINATI/Projet-Forum.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

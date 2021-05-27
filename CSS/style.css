@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     font-family: system-ui;
     background: #dbdbdb;
@@ -42,11 +46,16 @@ body {
     display: flex;
     flex-direction: column;
     width: 40vw;
-    background-color: #3a3f5a;
+    background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #aaa;
     border-radius: 60px;
     margin: 100px auto auto;
     text-align: center;
+    margin-bottom: 75px;
+
+}
+
+.inscrire {
 
 }
 
@@ -65,10 +74,6 @@ body {
     padding-left: 10px;
 }
 
-h2 {
-    font-family: "Maiandra GD";
-    color: darkorange;
-}
 
 /*/////////////           BURGER + NAVBAR LEFT         ////////////////*/
 
@@ -200,8 +205,6 @@ a.button2 {
     display: flex;
     flex-direction: row;
     margin-top: 20px;
-    height: 1500px;
-
 }
 
 
@@ -215,7 +218,7 @@ a.button2 {
 .vertical-line{
     border-left: 2px solid #000;
     display: inline-block;
-    height: 1475px;
+    height: 400px;
     margin: 0 20px;
     margin-right: 125px;
 }
@@ -374,10 +377,13 @@ a.button2 {
 
 
 .footer {
-    width:100%;
+
+    z-index: 5;
     overflow: hidden;
-    z-index: 3;
     background-color: rgb(25, 123, 159);
+    position: absolute;
+    width: 100%;
+    height: 200px;
 }
 
 .container {
