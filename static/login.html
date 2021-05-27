@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Astulpho - Forum</title>
+    <link href="/CSS/style.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<div id="main">
+
+    <div class="section">
+
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Clients</a>
+            <a href="#">Contact</a>
+        </div>
+
+    <!-- Use any element to open the sidenav -->
+
+        <div class="start">
+            <div class="bigburger" onclick="openNav()">
+                <div class="burger"></div>
+                <div class="burger"></div>
+                <div class="burger"></div>
+            </div>
+            <a href="/" class="title">
+                <h3>Astulpho</h3>
+            </a>
+        </div>
+
+        <script>
+        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
+        </script>
+
+
+    </div>
+
+
+    <div class="utilisateur">
+        <div class="connecter">
+
+            <h2>SE CONNECTER</h2>
+            <br>
+            <div>Utilisateur :</div>
+            <input>
+
+
+            <div><br>Mot de passe :</div>
+            <input>
+            <br>
+        </div>
+
+        <br>
+        <hr noshade style="width:70%; height:3px; text-align:left; border:1px black; border-radius: 100px;">
+
+        <a href="/signin" class="inscrire">
+            <h2>PAS ENCORE DE COMPTE ?<br> CREER EN UN MAINTENANT !</h2>
+        </a>
+
+    </div>
+
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title">FORUM</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Qui sommes-nous</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Contactez-nous</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title">Olala</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Comment s'y prendre ?</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Mais oui !</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">En effet !</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title"> . ? .</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">. . .</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
