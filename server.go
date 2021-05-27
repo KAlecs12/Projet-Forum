@@ -15,6 +15,7 @@ func main() {
 	http.HandleFunc("/signin", signinhandler)
 	http.HandleFunc("/login", loginhandler)
 	http.HandleFunc("/account", accounthandler)
+	http.HandleFunc("/post", posthandler)
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -108,6 +109,30 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
 	t, err := template.ParseFiles("./static/account.html")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+	}
+	content := ""
+	err = t.Execute(w, content)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+	}
+
+}
+
+func posthandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/post" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// sur la page d'accueil, on récupère le template index.html
+	t, err := template.ParseFiles("./static/post.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 	}
