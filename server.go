@@ -39,11 +39,13 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./static/index.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 	content := ""
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 
 }
@@ -63,11 +65,13 @@ func signinhandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./static/signin.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 	content := ""
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 
 }
@@ -87,11 +91,13 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./static/login.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 	content := ""
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 
 }
@@ -111,11 +117,13 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./static/account.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 	content := ""
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 
 }
@@ -135,11 +143,13 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./static/post.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 	content := ""
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
 	}
 
 }
