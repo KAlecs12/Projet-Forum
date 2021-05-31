@@ -52,16 +52,43 @@
 
     </div>
 
+    <!--        PATH de la page         -->
 
-    <div class="utilisateur">
+    <ol class="breadcrumb">
+        <li class="active">
+            <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+            <a class="item" href="/">Forum</a>
 
-        <div class="min-h-screen flex items-center justify-center mt-10 px-4 sm:px-6 lg:px-8">
+        </li>
+        <li class="item">&nbsp; → &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">Connexion</a>
+        </li>
+
+    </ol>
+
+
+    <!--    Zone de connexion   -->
+
+
+
+    <div class="connexion max-w-5xl">
+
+        <div class="min-h-screen flex items-center mt-10 px-4 sm:px-6 lg:px-8">
+            <a href="/signin" class="logtosign-box max-w-sm m-0">
+                <p class="logtosign-title"> Pas encore de compte ?</p>
+                <p class="logtosign-text">Venez intéragir avec les membres de la communauté, inscrivez-vous des maintenant ! </p>
+            </a>
+
+            <hr noshade style="width:5px; height: 200px; margin-left:5%; margin-right:5%; margin-bottom: 15px; border:1px black; border-radius: 100px;">
+
             <div class="max-w-md w-full space-y-8">
                 <div>
 
                     <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow">
                     <h2 class="mt-6 text-center text-3xl font-muli text-yellow-400">
-                        Connectez-vous à votre compte !
+                        Vous avez déjà un compte ?
                     </h2>
 
                 </div>
@@ -113,11 +140,7 @@
 
 
         <br>
-        <hr noshade style="width:70%; height:3px; margin-left:15%; margin-bottom: 15px; border:1px black; border-radius: 100px;">
 
-        <a href="/signin" class="font-muli mb-3 text-yellow-400">
-            <h2>PAS ENCORE DE COMPTE ?<br> CREER EN UN MAINTENANT !</h2>
-        </a>
 
     </div>
 
