@@ -4,6 +4,7 @@
 
 body {
     font-family: system-ui;
+    width: 100%;
     background: -webkit-linear-gradient(#6d5b7e, #6b6770 100%);
     background-repeat: no-repeat;
 
@@ -29,6 +30,14 @@ body {
     align-items: center;
 }
 
+
+.imgsize {
+
+    height: 70px;
+    width: 70px;
+
+}
+
 /* ---------- connect button --------------*/
 
 .connecter {
@@ -42,13 +51,13 @@ body {
 .utilisateur {
     display: flex;
     flex-direction: column;
-    width: 40vw;
+    width: 60%;
     background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #29222f;
     border-radius: 60px;
-    margin: 100px auto auto;
+    margin: 5% auto auto;
     text-align: center;
-    margin-bottom: 75px;
+    margin-bottom: 5%;
 
 }
 
@@ -58,9 +67,9 @@ body {
     background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #29222f;
     border-radius: 60px;
-    margin: 100px auto auto;
+    margin: 5% auto auto;
     text-align: center;
-    margin-bottom: 75px;
+    margin-bottom: 5%;
 }
 
 .inscrire {
@@ -470,7 +479,7 @@ margin-top: 20px;
 }
 
 .g-container {
-    width: 85rem;
+    width: 100%;
     margin: 0 auto;
     padding: 0;
 }

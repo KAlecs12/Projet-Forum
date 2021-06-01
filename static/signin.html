@@ -5,6 +5,7 @@
     <title>Astulpho - Forum</title>
     <link href="/CSS/style.css" rel="stylesheet"/>
     <link href="/CSS/tailwind.css" rel="stylesheet"/>
+    <script src="https://cdn.tiny.cloud/1/nb5qk8y8y9zqnqlmgm8kzwl8280vhjstk2w65ysciq73mahy/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
 </head>
 <body>
@@ -105,10 +106,24 @@
                         <label for="password" class="text-gray-800">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
                     </div>
 
+
+                    <script>
+                        tinymce.init({
+                            selector: '#mytextarea'
+                        });
+                    </script>
+
+
+
                     <div>
                         <br>
                         <label for="description" class="text-yellow-400 float-left mb-0.5">Description personnelle</label>
-                        <textarea id="description" name="description" type="text" rows="3"  autocomplete="current-description" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"></textarea>
+<!--                        <textarea id="description" name="description" type="text" rows="3"  autocomplete="current-description" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"></textarea>-->
+                            <br><br>
+                            <form method="post" id="description">
+                                <textarea id="mytextarea"></textarea>
+                            </form><br>
+
                         <label for="description" class="text-gray-800">Note: Un petit message a nous faire passer ? ;)</label>
                     </div>
 
@@ -146,6 +161,48 @@
 
 
 </div>
+
+
+
+                                        <!--         FOOTER           -->
+<footer id="g-footer">
+    <div class="g-container">
+        <div class="g-grid">
+            <div class="g-block size-100">
+                <div id="iconmenu-5685-particle" class="g-content g-particle">
+                    <div class="g-iconmenu ">
+
+                        <a target="_parent" href="https://discord.gg/sxjHqfx6Hk" title="Discord" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-wechat"></span>
+                            <span class="g-iconmenu-text">Discord</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Facebook" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-facebook"></span>
+                            <span class="g-iconmenu-text">Facebook</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Instagram" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-instagram"></span>
+                            <span class="g-iconmenu-text">Instagram</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Twitter" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-twitter"></span>
+                            <span class="g-iconmenu-text">Twitter</span>
+                        </a>
+
+                        <a target="_parent" href="/" title="Forum" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-group"></span>
+                            <span class="g-iconmenu-text">Forum</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <footer class="footer">
     <div class="container">
