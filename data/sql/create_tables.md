@@ -1,5 +1,14 @@
 -- This file contains instructions to create all the tables
 
+-- La table Users commence à la ligne      12
+-- La table Category commence à la ligne   22
+-- La table UsersCat commence à la ligne   29
+-- La table Posts commence à la ligne      36
+-- La table PostsCat commence à la ligne   49
+-- La table Comments commence à la ligne   56
+-- La table Badge commence à la ligne      69
+-- La table UsersBadge commence à la ligne 77
+
 CREATE TABLE Users (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	nickname TEXT NOT NULL,
