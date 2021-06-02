@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Astulpho - Création de poste</title>
+    <link href="/CSS/style.css" rel="stylesheet"/>
+    <link href="/CSS/tailwind.css" rel="stylesheet"/>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+<div id="main">
+
+    <script>
+
+        //  SIDENAV
+
+        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
+
+    </script>
+
+
+
+    <!--    HEADER       -->
+
+    <div class="section">
+
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="/post">Random Post</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Clients</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <!-- Use any element to open the sidenav -->
+        <div class="start">
+            <div class="bigburger" onclick="openNav()">
+                <div class="burger"></div>
+                <div class="burger"></div>
+                <div class="burger"></div>
+            </div>
+
+            <a href="/" class="title">
+                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+            </a>
+        </div>
+
+
+        <div class="connectb">
+            <a href="/postcreation" class="button1">Créer un poste</a>
+            <a href="/account" class="button1">Mon compte</a>
+            <a href="/login" class="button1">Se connecter</a>
+            <a href="/signin" class="button2">S'inscrire</a>
+        </div>
+
+    </div>
+    <!--    BODY     -->
+
+    <ol class="breadcrumb">
+
+        <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+        <a class="item" href="/">Forum</a>
+
+        <li class="item">&nbsp; → &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">Création de poste</a>
+        </li>
+
+    </ol>
+
+
+    <div class="body-content">
+
+
+
+    <!--        SLIDER         -->
+
+    <!--            <div id="homepage-slider" class="st-slider">-->
+    <!--                <input type="radio" class="cs_anchor radio" name="slider" id="play1" checked=""/>-->
+
+    <!--                <div class="images">-->
+    <!--                    <div class="images-inner">-->
+    <!--                        <div class="image-slide">-->
+
+    <!--                            <div class="image bg1" style="background-color:lightblue;"> Miam le Q </div>-->
+    <!--                        </div>-->
+    <!--                        <div class="image-slide">-->
+    <!--                            <div class="image bg2" style="background-color:lightblue;">ohihohihohiho bien vu</div>-->
+    <!--                        </div>-->
+    <!--                        <div class="image-slide">-->
+    <!--                            <div class="image bg3" style="background-color:lightblue;">Nice one broo</div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--                <div class="labels">-->
+
+    <!--                    <label for="slide1" class="label"></label>-->
+    <!--                    <label for="slide2" class="label"></label>-->
+    <!--                    <label for="slide3" class="label"></label>-->
+
+    <!--                    <div class="fake-radio">-->
+    <!--                        <label for="slide1" class="radio-btn" name="slider" id="slide1"></label>-->
+    <!--                        <label for="slide2" class="radio-btn" name="slider" id="slide2"></label>-->
+    <!--                        <label for="slide3" class="radio-btn" name="slider" id="slide3"></label>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+
+</div>
+
+<!--         FOOTER           -->
+<footer id="g-footer">
+    <div class="g-container">
+        <div class="g-grid">
+            <div class="g-block size-100">
+                <div id="iconmenu-5685-particle" class="g-content g-particle">
+                    <div class="g-iconmenu ">
+
+                        <a target="_parent" href="https://discord.gg/sxjHqfx6Hk" title="Discord" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-wechat"></span>
+                            <span class="g-iconmenu-text">Discord</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Facebook" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-facebook"></span>
+                            <span class="g-iconmenu-text">Facebook</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Instagram" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-instagram"></span>
+                            <span class="g-iconmenu-text">Instagram</span>
+                        </a>
+
+                        <a target="_parent" href="#" title="Twitter" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-twitter"></span>
+                            <span class="g-iconmenu-text">Twitter</span>
+                        </a>
+
+                        <a target="_parent" href="/" title="Forum" class="g-iconmenu-item">
+                            <span class="g-iconmenu-icon fa fa-group"></span>
+                            <span class="g-iconmenu-text">Forum</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="footer">
+    <div class="fcontainer">
+        <div class="footer-content">
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title">FORUM</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Qui sommes-nous</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Contactez-nous</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title">Olala</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Comment s'y prendre ?</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">Mais oui !</a>
+                    </li>
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">En effet !</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-main_item">
+                <span class="footer-main_item_title"> . ? .</span>
+                <ul class="footer-main_item_list">
+                    <li class="footer-main_item_list_item">
+                        <a class="footer-main_item_list_link" href="#">. . .</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

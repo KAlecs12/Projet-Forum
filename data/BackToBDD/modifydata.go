@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"strconv"
 )
 
 // La fonction insert prend une table et une interface de données pour insérer ces données dans la BDD
@@ -235,48 +234,4 @@ func CreateTables() string {
 	);
 	`
 	return tableList
-}
-
-// ! Attention, je ne certifie pas qu'elle fonctionne
-// La fonction InsertUtoU correspond à Insert User to Users, donc ajouter la configuration d'un User à la table Users
-func InsertUtoU(Nickname string, Email string, Password string, Biography string, Status string) string {
-	User := `
-	INSERT INTO Users
-	(Nickname, Email, Password, Biography, Status) 
-	VALUES(`
-	User += "\"" + Nickname + "\" ,\"" + Email + "\" ,\"" + Password + "\" ,\"" + Biography + "\" ,\"" + Status + "\");"
-	return User
-}
-
-// ! Attention, je ne certifie pas qu'elle fonctionne
-// La fonction InsertCatToCat correspond à Insert Category to Category, donc ajouter la configuration d'une Catégorie à la table Category
-func InsertCatToCat(categoryName string, categoryDescription string) string {
-	Category := `
-	INSERT INTO Category
-	(categoryName, categoryDescription) 
-	VALUES(`
-	Category += "\"" + categoryName + "\" ,\"" + categoryDescription + "\");"
-	return Category
-}
-
-// ! Attention, je ne certifie pas qu'elle fonctionne
-// La fonction InsertPtoP correspond à Insert Post to Post, donc ajouter la configuration d'un Post à la table Post
-func InsertPtoP(Title string, postContent string, creationDate int, modificationDate int, deleteDate int, likesCounter int, dislikesCounter int, ID_User int, ID_Category int) string {
-	Post := `
-	INSERT INTO Posts
-	(Title, postContent, creationDate, modificationDate, deleteDate, likesCounter, dislikesCounter, ID_User, ID_Category)
-	VALUES(`
-	Post += "\"" + Title + "\" ,\"" + postContent + "\" , " + strconv.Itoa(creationDate) + ", " + strconv.Itoa(modificationDate) + ", " + strconv.Itoa(deleteDate) + " ,\"" + strconv.Itoa(likesCounter) + "\" ,\"" + strconv.Itoa(dislikesCounter) + "\" ,\"" + strconv.Itoa(ID_User) + "\" ,\"" + strconv.Itoa(ID_Category) + "\");"
-	return Post
-}
-
-// ! Attention, je ne certifie pas qu'elle fonctionne
-// La fonction InsertComToCom correspond à Insert Comment to Comments, donc ajouter la configuration d'un Comment à la table Comments
-func InsertComToCom(commentContent string, creationDate int, modificationDate int, deleteDate int, likesCounter int, dislikesCounter int, ID_User int, ID_Post int) string {
-	Comment := `
-	INSERT INTO Comments
-	( commentContent, creationDate, modificationDate, deleteDate, likesCounter, dislikesCounter, ID_User, ID_Post)
-	VALUES(`
-	Comment += "\"" + commentContent + "\" , " + strconv.Itoa(creationDate) + ", " + strconv.Itoa(modificationDate) + ", " + strconv.Itoa(deleteDate) + ", " + strconv.Itoa(likesCounter) + "\" ,\"" + strconv.Itoa(dislikesCounter) + "\" ,\"" + strconv.Itoa(ID_User) + "\" ,\"" + strconv.Itoa(ID_Post) + "\");"
-	return Comment
 }

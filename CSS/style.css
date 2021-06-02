@@ -270,6 +270,12 @@ a.button2 {
 }
 
 
+.category {
+    border: 1px solid #000000;
+    margin: 1.563rem;
+}
+
+
 
 .breadcrumb {
     border-radius: 0px;
@@ -280,6 +286,12 @@ a.button2 {
     box-shadow: 5px 5px 7px #29222f
 }
 
+.breadcrumbcat {
+    border-radius: 0px;
+    padding: 5px 15px 5px 15px;
+    list-style: none;
+    background: #4a4e6d;
+}
 
 .breadcrumb>li {
     display: inline-block;

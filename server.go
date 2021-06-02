@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/login", loginhandler)
 	http.HandleFunc("/account", accounthandler)
 	http.HandleFunc("/post", posthandler)
+	http.HandleFunc("/postcreation", postcreation)
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -144,6 +145,32 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
 	t, err := template.ParseFiles("./static/post.html")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+	content := ""
+	err = t.Execute(w, content)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+}
+
+func postcreation(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/postcreation" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// sur la page d'accueil, on récupère le template index.html
+	t, err := template.ParseFiles("./static/createpost.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
