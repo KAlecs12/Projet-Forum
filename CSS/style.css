@@ -554,6 +554,104 @@ margin-top: 20px;
     padding: 5px 0;
 }
 
+                                /*  SEARCH BAR   */
+
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+}
+.header {
+    padding: 8px 0 10px 0;
+    background: #444;
+    position: relative;
+    display: none;
+    z-index: 2000;
+}
+.header .navigation{
+    box-shadow: 0px 0px 10px #333;
+}
+.header .navigation span {
+    display: block;
+    margin-top: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #fff;
+}
+.header .navigation ul {
+    list-style: none;
+    padding-left: 0px;
+}
+.header .navigation ul li {
+    padding-bottom: 6px;
+    padding-top: 6px;
+    background: #fff;
+    padding-left: 10px;
+    border: 1px solid #eee;
+    border-top: 0;
+}
+.header .navigation ul li a {
+    font-size: 13px;
+}
+a {
+    color: #888;
+}
+.header .navigation {
+    box-shadow: 0px 0px 10px #333;
+}
+.header .navigation span {
+    display: block;
+    margin-top: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #fff;
+}
+.header .navigation span {
+    display: block;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed #ccc;
+    font-size: 15px;
+    color: #555;
+}
+.header .navigation input {
+    margin-bottom: 10px;
+}
+.menu-btn {
+    right: 10%;
+    z-index: 2000;
+}
+.menu-btn a {
+    display: inline-block;
+    width: 120px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    background: rgba(34,34,34,100);
+    text-decoration: none !important;
+}
+.head {
+    background: rgba(0, 0, 0, 1.0);
+    border-top: 3px solid #F76753;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 8px 0;
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+}
+
+.br-lblue {
+    background: #368699;
+}
+.br-green {
+    background: #3EB95E;
+}
+.br-red {
+    background: #F7A453;
+}
+
 
 
 
@@ -571,7 +669,7 @@ margin-top: 20px;
     display: -webkit-box;
 }
 
-.container {
+.fcontainer {
     box-sizing: border-box;
     color: #000000;
     display: block;
