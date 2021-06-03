@@ -1,4 +1,4 @@
-package BackToBDD
+package main
 
 import (
 	"database/sql"
@@ -222,7 +222,7 @@ func CreateTables() string {
 	ID_Category INTEGER,
 	FOREIGN KEY(ID_User) REFERENCES Users(ID_User),
 	FOREIGN KEY(ID_Category) REFERENCES Category(ID_Category),
-	PRIMARY KEY(ID_User, ID_Category)
+	PRIMARY KEY(ID_User, ID_Category) 
 	);
 	
 	CREATE TABLE if NOT EXISTS Posseder(

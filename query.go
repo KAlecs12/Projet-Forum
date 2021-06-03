@@ -1,4 +1,4 @@
-package BackToBDD
+package main
 
 import (
 	"database/sql"
@@ -29,6 +29,7 @@ type Users struct {
 	biography    string
 	profileImage string
 	status       string
+	password     string
 }
 
 type Category struct {
@@ -91,19 +92,6 @@ func query(table Table) {
 	rows, err := db.Query(fmt.Sprintf("%s %s", "SELECT * FROM ", table))
 	defer rows.Close()
 	checkErr(err)
-	// var uid int
-	// var username string
-	// var department string
-	// var created time.Time
-
-	// for rows.Next() {
-	// 	err = rows.Scan(&uid, &username, &department, &created)
-	// 	checkErr(err)
-	// 	fmt.Println(uid)
-	// 	fmt.Println(username)
-	// 	fmt.Println(department)
-	// 	fmt.Println(created)
-	// }
 }
 
 // La fonction queryItem prend une table et un id en paramètre pour faire afficher les informations correspondantes.
@@ -147,7 +135,7 @@ func queryEmail(email string) bool {
 	return true
 }
 
-// De même que queryEmail, queryUname va vérifier si le nom d'utilisateur appartient déjà à un utilisateur enregistré dans la base de données
+// La fonction queryUname va vérifier si le nom d'utilisateur appartient déjà à un utilisateur enregistré dans la base de données
 func queryUname(username string) bool {
 	database, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
@@ -163,6 +151,40 @@ func queryUname(username string) bool {
 		return false
 	}
 	return true
+}
+
+// La fonction queryLogin va vérifier si le nom d'utilisateur et le mot de passe appartient déjà à un utilisateur enregistré dans la base de données
+func queryLogin(username string, password string) bool {
+	database, err := sql.Open("sqlite3", "./forum.db")
+	checkErr(err)
+	defer database.Close()
+	verif := `SELECT username, password FROM Users WHERE username = ? AND password = ?`
+	err = database.QueryRow(verif, username, password).Scan(&username, &password)
+
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Print(err)
+		}
+		return false
+	}
+	return true
+}
+
+func queryPassword(email string) string {
+	db, err := sql.Open("sqlite3", "./forum.db")
+	checkErr(err)
+	defer db.Close()
+	verif := `SELECT password FROM Users WHERE email = ?`
+	err = db.QueryRow(verif, email).Scan(&email)
+
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Print(err)
+		}
+		return verif
+	}
+	return verif
+
 }
 
 func checkErr(err error) {

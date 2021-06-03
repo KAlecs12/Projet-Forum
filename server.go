@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
@@ -52,6 +53,18 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	username := "testeur n1"
+
+	C := http.Cookie{
+		Name:  "username",
+		Value: username,
+	}
+
+	// cookie : username=testeur n1
+	r.AddCookie(&C)
+
+	// r.Cookie("username") --> retourne une erreur ou non
+
 }
 
 func signinhandler(w http.ResponseWriter, r *http.Request) {
@@ -78,6 +91,10 @@ func signinhandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	nickname := r.FormValue("pseudo")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
 }
 
 func loginhandler(w http.ResponseWriter, r *http.Request) {
@@ -102,6 +119,15 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
+	}
+
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
+	if CheckPasswordHash(password, queryPassword(email)) {
+		// Si c'est bon, on lui associe le cookie
+	} else {
+		// Si c'est pas bon, on lui renvoie une erreur
 	}
 
 }
@@ -182,4 +208,14 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
