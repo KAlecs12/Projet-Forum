@@ -153,13 +153,13 @@ func queryUname(username string) bool {
 	return true
 }
 
-// La fonction queryLogin va vérifier si le nom d'utilisateur et le mot de passe appartient déjà à un utilisateur enregistré dans la base de données
-func queryLogin(username string, password string) bool {
+// La fonction queryLogin va vérifier si le nom d'utilisateur et l'email appartient déjà à un utilisateur enregistré dans la base de données
+func queryLogin(username string, email string) bool {
 	database, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
 	defer database.Close()
-	verif := `SELECT username, password FROM Users WHERE username = ? AND password = ?`
-	err = database.QueryRow(verif, username, password).Scan(&username, &password)
+	verif := `SELECT username, email FROM Users WHERE username = ? AND email = ?`
+	err = database.QueryRow(verif, username, email).Scan(&username, &email)
 
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -185,10 +185,4 @@ func queryPassword(email string) string {
 	}
 	return verif
 
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

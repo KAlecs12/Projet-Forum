@@ -235,3 +235,14 @@ func CreateTables() string {
 	`
 	return tableList
 }
+
+func registerBDD(nickname string, email string, hashedpwd string) {
+	db, err := sql.Open("sqlite3", "./data/forum.db")
+	defer db.Close()
+	checkErr(err)
+
+	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd) VALUES (?, ?, ?)")
+	checkErr(err)
+	stmt.Exec(nickname, email, hashedpwd)
+
+}
