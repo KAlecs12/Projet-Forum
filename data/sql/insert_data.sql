@@ -1,7 +1,5 @@
--- This file contains demo data insertion
-
-INSERT INTO Users (nickname, email, role, biography, profileImage, status)
-VALUES ("Nami", "marilou.michel@ynov.com", "Admin", "I love unicorns", "https://urlz.fr/fI83", "");
+INSERT INTO Users (nickname, email, role, biography, profileImage, status, hashedpwd)
+VALUES ("Nami", "marilou.michel@ynov.com", "Admin", "I love unicorns", "https://urlz.fr/fI83", "", "agigcusuyaffa98z4456");
 
 INSERT INTO Category (name, description)
 VALUES ("Video Game", "For video game lovers!");

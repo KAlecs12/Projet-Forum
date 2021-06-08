@@ -1,10 +1,8 @@
--- This file contains instructions to delete the tables
-
-DROP TABLE Users;
-DROP TABLE Category;
-DROP TABLE UsersCat;
-DROP TABLE Posts;
-DROP TABLE PostsCat;
-DROP TABLE Comments;
-DROP TABLE Badge;
-DROP TABLE UsersBadge;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS UsersCat;
+DROP TABLE IF EXISTS Posts;
+DROP TABLE IF EXISTS PostsCat;
+DROP TABLE IF EXISTS Comments;
+DROP TABLE IF EXISTS Badge;
+DROP TABLE IF EXISTS UsersBadge;

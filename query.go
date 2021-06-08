@@ -84,7 +84,7 @@ type UsersBadge struct {
 
 // La fonction query prend une table en paramètre pour en afficher son contenu
 func query(table Table) {
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	checkErr(err)
 
@@ -96,7 +96,7 @@ func query(table Table) {
 
 // La fonction queryItem prend une table et un id en paramètre pour faire afficher les informations correspondantes.
 func queryItem(table Table, id int) {
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	checkErr(err)
 
@@ -158,7 +158,7 @@ func queryLogin(username string, email string) bool {
 	database, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
 	defer database.Close()
-	verif := `SELECT username, email FROM Users WHERE username = ? AND email = ?`
+	verif := `SELECT nickname, email FROM Users WHERE nickname = ? OR email = ?`
 	err = database.QueryRow(verif, username, email).Scan(&username, &email)
 
 	if err != nil {
@@ -174,15 +174,25 @@ func queryPassword(email string) string {
 	db, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
 	defer db.Close()
-	verif := `SELECT password FROM Users WHERE email = ?`
-	err = db.QueryRow(verif, email).Scan(&email)
+	query := "SELECT hashedpwd FROM Users WHERE email = \"" + email + "\""
+	result, err := db.Query(query)
+	checkErr(err)
+	var hashedpwd string
 
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Print(err)
-		}
-		return verif
+	for result.Next() {
+		err = result.Scan(&hashedpwd)
+		checkErr(err)
+		return hashedpwd
 	}
-	return verif
+	return hashedpwd
+}
 
+func InitDB() {
+	db, err := sql.Open("sqlite3", "./forum.db")
+	checkErr(err)
+	defer db.Close()
+
+	createBDD := CreateTables()
+	_, err = db.Exec(createBDD)
+	checkErr(err)
 }

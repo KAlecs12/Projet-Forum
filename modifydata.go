@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"io/ioutil"
 )
 
 // La fonction insert prend une table et une interface de données pour insérer ces données dans la BDD
@@ -14,7 +15,7 @@ func insert(table Table, value interface{}) error {
 	var res sql.Result
 	var err error
 
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	checkErr(err)
 	// insert
@@ -105,12 +106,12 @@ func update(table Table, value interface{}, id int) {
 	var stmt *sql.Stmt
 	var res sql.Result
 
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	checkErr(err)
 
 	// update
-	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "UPDATE ", table, " SET username=? WHERE id=?"))
+	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "UPDATE ", table, " SET nickname=? WHERE id=?"))
 	checkErr(err)
 
 	res, err = stmt.Exec("astaxieupdate", id)
@@ -128,7 +129,7 @@ func delete(table Table, id int) {
 	var res sql.Result
 	var affect int64
 
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
 	defer db.Close()
 
@@ -148,101 +149,28 @@ func delete(table Table, id int) {
 
 // La fonction CreateTables permet de réinitialiser les tables en les supprimant et en les recréant, seules les tables précisées dans le code sont touchées
 func CreateTables() string {
-	tableList := `
-	DROP TABLE if EXISTS Users;
-	DROP TABLE if EXISTS Category;
-	DROP TABLE if EXISTS Comments;
-	DROP TABLE if EXISTS Posts;
-	DROP TABLE if EXISTS Cookie;
-	DROP TABLE if EXISTS Badge;
-	DROP TABLE if EXISTS Posseder;
-	DROP TABLE if EXISTS Modifier;
-	
-	CREATE TABLE if NOT EXISTS Users(
-	ID_User INTEGER PRIMARY KEY autoincrement, 
-	Nickname TEXT, 
-	Email TEXT, 
-	Password TEXT, 
-	Biography TEXT, 
-	profileImage BLOB, 
-	Status TEXT
-	);
-	
-	CREATE TABLE if NOT EXISTS Category (
-	ID_Category INTEGER PRIMARY KEY autoincrement,
-	categoryName TEXT,
-	categoryDescription TEXT
-	);
-	
-	CREATE TABLE if NOT EXISTS Posts (
-	ID_Post INTEGER PRIMARY KEY autoincrement,
-	Title TEXT,
-	postContent TEXT,
-	creationDate DATE,
-	modificationDate DATE,
-	deleteDate DATE,
-	likesCounter INTEGER,
-	dislikesCounter INTEGER,
-	ID_User INTEGER,
-	ID_Category INTEGER,
-	FOREIGN KEY(ID_User) REFERENCES Users(ID_User),
-	FOREIGN KEY(ID_Category) REFERENCES Category(ID_Category)
-	);
-	
-	CREATE TABLE if NOT EXISTS Comments(
-	ID_Comment INTEGER PRIMARY KEY autoincrement,
-	commentContent TEXT,
-	creationDate DATE,
-	modificationDate DATE,
-	deleteDate DATE,
-	likesCounter INTEGER,
-	dislikesCounter INTEGER,
-	ID_User INTEGER,
-	ID_Post INTEGER,
-	FOREIGN KEY(ID_User) REFERENCES Users(ID_User),
-	FOREIGN KEY(ID_Post) REFERENCES Posts(ID_Post)
-	);
-	
-	CREATE TABLE if NOT EXISTS Badge(
-	ID_Badge INTEGER PRIMARY KEY autoincrement,
-	badgeName TEXT,
-	badgeImage BLOB,
-	badgeDescription TEXT
-	);
-	
-	CREATE TABLE if NOT EXISTS Cookie(
-	ID_Cookie INTEGER PRIMARY KEY autoincrement,
-	creationDate DATE,
-	ID_User INTEGER,
-	FOREIGN KEY(ID_User) REFERENCES Users(ID_User)
-	);
-	
-	CREATE TABLE if NOT EXISTS Modifier(
-	ID_User INTEGER,
-	ID_Category INTEGER,
-	FOREIGN KEY(ID_User) REFERENCES Users(ID_User),
-	FOREIGN KEY(ID_Category) REFERENCES Category(ID_Category),
-	PRIMARY KEY(ID_User, ID_Category) 
-	);
-	
-	CREATE TABLE if NOT EXISTS Posseder(
-	ID_Badge INTEGER,
-	ID_User INTEGER,
-	FOREIGN KEY(ID_Badge) REFERENCES Badge(ID_Badge),
-	FOREIGN KEY(ID_User) REFERENCES Users(ID_User),
-	PRIMARY KEY(ID_Badge, ID_User)
-	);
-	`
+
+	dropTable, err :=  ioutil.ReadFile("data/sql/drop_tables.sql")
+	checkErr(err)
+
+	createTable, err :=  ioutil.ReadFile("data/sql/create_tables.sql")
+	checkErr(err)
+
+	basicdata, err := ioutil.ReadFile("data/sql/insert_data.sql")
+	checkErr(err)
+
+	tableList := string(dropTable) + string(createTable) + string(basicdata)
 	return tableList
 }
 
 func registerBDD(nickname string, email string, hashedpwd string) {
-	db, err := sql.Open("sqlite3", "./data/forum.db")
+	db, err := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	checkErr(err)
 
 	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd) VALUES (?, ?, ?)")
 	checkErr(err)
-	stmt.Exec(nickname, email, hashedpwd)
+	_, err = stmt.Exec(nickname, email, hashedpwd)
+	checkErr(err)
 
 }
