@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 body {
-    font-family: system-ui;
+    font-family: system-ui, serif;
     width: 100%;
-    background: -webkit-linear-gradient(#6d5b7e, #6b6770 100%);
-    background-repeat: no-repeat;
+    background: -webkit-linear-gradient(#6d5b7e, #6b6770 100%) no-repeat;
 
 }
 
@@ -55,10 +54,20 @@ body {
     background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #29222f;
     border-radius: 60px;
-    margin: 5% auto auto;
     text-align: center;
-    margin-bottom: 5%;
+    margin: 5% auto;
 
+}
+
+.flexcss {
+    display: flex;
+}
+
+
+@media screen and (max-width: 1024px) {
+    .flexcss {
+        flex-direction: column;
+    }
 }
 
 .connexion {
@@ -67,9 +76,33 @@ body {
     background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #29222f;
     border-radius: 60px;
-    margin: 5% auto auto;
     text-align: center;
-    margin-bottom: 5%;
+    margin: 5% auto;
+    width: 60rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .connexion {
+        width: 40rem;
+    }
+}
+
+
+.separation {
+    width:5px;
+    height: 200px;
+    margin-left:5%;
+    margin-right:5%;
+    margin-bottom: 15px;
+    border:1px black;
+    border-radius: 100px;
+}
+
+@media screen and (max-width: 1024px) {
+    .separation {
+        width: 350px;
+        height: 5px;
+    }
 }
 
 .inscrire {
@@ -100,9 +133,8 @@ body {
     background-color: #4a4e6d;
     box-shadow: 10px 10px 12px #747474;
     border-radius: 5px;
-    margin: 30px auto auto;
     text-align: center;
-    margin-bottom: 40px;
+    margin: 30px auto 40px;
 
 }
 
@@ -134,6 +166,65 @@ body {
     font-weight: bold;
     margin-bottom: 20px;
     text-shadow: 0 0 3px #000000cc, 0 0 8px #00000080;
+}
+
+@media screen and (max-width: 1024px) {
+    .logtosign-text {
+        font-size: 30px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .logtosign-title {
+        font-size: 50px;
+    }
+}
+
+.phone {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .phone {
+        font-size: 70px;
+        line-height: 5rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .phone2 {
+        font-size: 40px;
+        line-height: 3rem;
+        
+    }
+}
+
+.inputphone {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .inputphone {
+        font-size: 2rem;
+        line-height: 4rem;
+    }
+}
+
+.sizebutton {
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background: rgb(50, 49, 49);
+}
+
+@media screen and (max-width: 1024px) {
+    .sizebutton {
+        height: 100px;
+        font-size: 3rem;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 
@@ -265,9 +356,8 @@ a.button2 {
 
 .body-content {
     padding: 0.938rem;
-    border: 1px solid #edc73f;
+    border: 1px solid #bf8c40;
     margin: 1.563rem;
-    width: 75%;
 }
 
 
@@ -279,7 +369,6 @@ a.button2 {
 
 
 .breadcrumb {
-    border-radius: 0px;
     padding: 5px 15px 5px 15px;
     list-style: none;
     margin: 1.563rem;
@@ -288,7 +377,6 @@ a.button2 {
 }
 
 .breadcrumbcat {
-    border-radius: 0px;
     padding: 5px 15px 5px 15px;
     list-style: none;
     background: #4a4e6d;
@@ -319,7 +407,10 @@ a.button2 {
 /*   PARTIE GAUCHE  */
 
 .gauche {
-    /*padding-left: 75%;*/
+    padding: 0.938rem;
+    border: 1px solid #bf8c40;
+    margin: 1.563rem;
+    width: 75%;
 }
 
 
@@ -327,8 +418,7 @@ a.button2 {
     border-left: 2px solid #000;
     display: inline-block;
     height: 400px;
-    margin: 0 20px;
-    margin-right: 125px;
+    margin: 0 125px 0 20px;
 }
 
 /*   PARTIE DROITE  */
@@ -583,7 +673,7 @@ a.button2 {
     z-index: 5;
 }
 .header .navigation{
-    box-shadow: 0px 0px 10px #333;
+    box-shadow: 0 0 10px #333;
 }
 .header .navigation span {
     display: block;
@@ -594,7 +684,7 @@ a.button2 {
 }
 .header .navigation ul {
     list-style: none;
-    padding-left: 0px;
+    padding-left: 0;
 }
 .header .navigation ul li {
     padding-bottom: 6px;
@@ -611,7 +701,7 @@ a {
     color: #888;
 }
 .header .navigation {
-    box-shadow: 0px 0px 10px #333;
+    box-shadow: 0 0 10px #333;
 }
 .header .navigation span {
     display: block;

@@ -11,9 +11,9 @@ import (
 )
 
 type popup struct {
-	Title 	string
+	Title   string
 	Content string
-	Need 	string
+	Need    string
 }
 
 var tpl *template.Template
@@ -49,6 +49,12 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
+
+	if r.Method == "POST" {
+		LoginToBDD(r)
+		return
+	}
+
 	if r.Method != "GET" {
 		http.Error(w, "Method is not supported.", http.StatusNotFound)
 		return
@@ -121,7 +127,7 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == "POST" {
-		LoginToBDD(w, r)
+		LoginToBDD(r)
 		return
 	}
 	if r.Method != "GET" {
@@ -142,7 +148,6 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-
 
 	//if CheckPasswordHash(password, queryPassword(email)) {
 	//	// Si c'est bon, on lui associe le cookie
@@ -268,11 +273,11 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LoginToBDD(w http.ResponseWriter, r *http.Request) {
+func LoginToBDD(r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	if CheckPasswordHash(password, queryPassword(email)){
+	if CheckPasswordHash(password, queryPassword(email)) {
 		log.Println("Le mdp est valide")
 	} else {
 		log.Println("Le mdp est incorrect")

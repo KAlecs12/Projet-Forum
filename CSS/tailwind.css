@@ -22247,7 +22247,7 @@ video {
   color: rgba(0, 0, 0, var(--tw-text-opacity));
 }
 
-.myblue {
+.text-bleu {
     --tw-text-opacity: 1;
     color: rgb(25, 123, 159, var(--tw-text-opacity));
 }
