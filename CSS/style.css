@@ -98,7 +98,7 @@ body {
     width: 80%;
     height: 400px;
     background-color: #4a4e6d;
-    box-shadow: 10px 10px 12px #aaa;
+    box-shadow: 10px 10px 12px #747474;
     border-radius: 5px;
     margin: 30px auto auto;
     text-align: center;
@@ -267,6 +267,7 @@ a.button2 {
     padding: 0.938rem;
     border: 1px solid #edc73f;
     margin: 1.563rem;
+    width: 75%;
 }
 
 
@@ -308,16 +309,17 @@ a.button2 {
 
 
 .body {
-display: flex;
-flex-direction: row;
-margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: space-evenly;
 }
 
 
 /*   PARTIE GAUCHE  */
 
 .gauche {
-    padding-left: 75%;
+    /*padding-left: 75%;*/
 }
 
 
@@ -575,10 +577,10 @@ margin-top: 20px;
 }
 .header {
     padding: 8px 0 10px 0;
-    background: #444;
+    background: #202324;
     position: relative;
     display: none;
-    z-index: 2000;
+    z-index: 5;
 }
 .header .navigation{
     box-shadow: 0px 0px 10px #333;
@@ -641,7 +643,8 @@ a {
     text-align: center;
     font-size: 14px;
     color: #fff;
-    background: rgba(34,34,34,100);
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
     text-decoration: none !important;
 }
 .head {
