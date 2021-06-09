@@ -54,7 +54,7 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		LoginToBDD(r)
+		LoginToBDD(w, r)
 		return
 	}
 
@@ -118,7 +118,7 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == "POST" {
-		LoginToBDD(r)
+		LoginToBDD(w, r)
 		return
 	}
 	if r.Method != "GET" {
@@ -264,7 +264,7 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LoginToBDD(r *http.Request) {
+func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 

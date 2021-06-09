@@ -140,10 +140,10 @@ func delete(table Table, id int) {
 // La fonction CreateTables permet de réinitialiser les tables en les supprimant et en les recréant, seules les tables précisées dans le code sont touchées
 func CreateTables() string {
 
-	dropTable, err :=  ioutil.ReadFile("data/sql/drop_tables.sql")
+	dropTable, err := ioutil.ReadFile("data/sql/drop_tables.sql")
 	checkErr(err)
 
-	createTable, err :=  ioutil.ReadFile("data/sql/create_tables.sql")
+	createTable, err := ioutil.ReadFile("data/sql/create_tables.sql")
 	checkErr(err)
 
 	basicdata, err := ioutil.ReadFile("data/sql/insert_data.sql")
