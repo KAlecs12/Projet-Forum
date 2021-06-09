@@ -3,9 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Table string
@@ -29,7 +30,6 @@ type Users struct {
 	biography    string
 	profileImage string
 	status       string
-	password     string
 }
 
 type Category struct {
@@ -84,11 +84,6 @@ type UsersBadge struct {
 
 // La fonction query prend une table en paramètre pour en afficher son contenu
 func query(table Table) {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	checkErr(err)
-
-	// query
 	rows, err := db.Query(fmt.Sprintf("%s %s", "SELECT * FROM ", table))
 	defer rows.Close()
 	checkErr(err)
@@ -96,11 +91,6 @@ func query(table Table) {
 
 // La fonction queryItem prend une table et un id en paramètre pour faire afficher les informations correspondantes.
 func queryItem(table Table, id int) {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	checkErr(err)
-
-	// query
 	rows, err := db.Query(fmt.Sprintf("%s %s %s %d", "SELECT * FROM ", table, "WHERE id=", id))
 	defer rows.Close()
 	checkErr(err)
@@ -120,47 +110,40 @@ func queryItem(table Table, id int) {
 }
 
 // La fonction queryEmail prend en paramètre un email et va vérifier si il existe un utilisateur avec cet email dans la base de données
-func queryEmail(email string) bool {
-	database, err := sql.Open("sqlite3", "./forum.db")
+func queryId(email string) int {
+	query := "SELECT id FROM Users WHERE email = \"" + email + "\""
+	result, err := db.Query(query)
 	checkErr(err)
-	defer database.Close()
-	verif := `SELECT email FROM Users WHERE email = ?`
-	err = database.QueryRow(verif, email).Scan(&email)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Print(err)
-		}
-		return false
+	var id int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&id)
+		checkErr(err)
+		return id
 	}
-	return true
+	return id
 }
 
 // La fonction queryUname va vérifier si le nom d'utilisateur appartient déjà à un utilisateur enregistré dans la base de données
-func queryUname(username string) bool {
-	database, err := sql.Open("sqlite3", "./forum.db")
+func queryUname(email string) string {
+	query := "SELECT nickname FROM Users WHERE email = \"" + email + "\""
+	result, err := db.Query(query)
 	checkErr(err)
-	defer database.Close()
-	verif := `SELECT username FROM Users WHERE username = ?`
-	err = database.QueryRow(verif, username).Scan(&username)
-
-	// vérificateur, si QueryRow.Scan retourne une erreur, c'est qu'il n'y a pas de ligne correspondant à la recherche SELECT
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Print(err)
-		}
-		return false
+	var nickname string
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nickname)
+		checkErr(err)
+		return nickname
 	}
-	return true
+	return nickname
 }
 
 // La fonction queryLogin va vérifier si le nom d'utilisateur et l'email appartient déjà à un utilisateur enregistré dans la base de données
 func queryLogin(username string, email string) bool {
-	database, err := sql.Open("sqlite3", "./forum.db")
-	checkErr(err)
-
-	defer database.Close()
+	var err error
 	verif := `SELECT nickname, email FROM Users WHERE nickname = ? OR email = ?`
-	err = database.QueryRow(verif, username, email).Scan(&username, &email)
+	err = db.QueryRow(verif, username, email).Scan(&username, &email)
 
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -172,14 +155,11 @@ func queryLogin(username string, email string) bool {
 }
 
 func queryPassword(email string) string {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	checkErr(err)
-	defer db.Close()
 	query := "SELECT hashedpwd FROM Users WHERE email = \"" + email + "\""
 	result, err := db.Query(query)
 	checkErr(err)
 	var hashedpwd string
-
+	defer result.Close()
 	for result.Next() {
 		err = result.Scan(&hashedpwd)
 		checkErr(err)
@@ -188,12 +168,35 @@ func queryPassword(email string) string {
 	return hashedpwd
 }
 
+// La fonction InitDB permet de réinitialiser la base de données, puis de recréer les tables nécessaires, avec les informations par défaut
 func InitDB() {
-	db, err := sql.Open("sqlite3", "./forum.db")
+	var err error
+	db, err = sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
-	defer db.Close()
 
 	createBDD := CreateTables()
 	_, err = db.Exec(createBDD)
 	checkErr(err)
+}
+
+func infosU() Users {
+	query := "SELECT nickname, email, role, biography, profileImage, status FROM Users WHERE id = 1"
+	result, err := db.Query(query)
+	checkErr(err)
+	var nickname, email, role, biography, profileImage, status string
+	defer result.Close()
+	User := Users{}
+	for result.Next() {
+		err = result.Scan(&nickname, &email, &role, &biography, &profileImage, &status)
+		checkErr(err)
+		User = Users{
+			nickname:     nickname,
+			email:        email,
+			role:         role,
+			biography:    biography,
+			profileImage: profileImage,
+			status:       status,
+		}
+	}
+	return User
 }

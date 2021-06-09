@@ -14,10 +14,6 @@ func insert(table Table, value interface{}) error {
 	var stmt *sql.Stmt
 	var res sql.Result
 	var err error
-
-	db, err := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	checkErr(err)
 	// insert
 	switch table {
 	case USERS:
@@ -105,10 +101,7 @@ func insert(table Table, value interface{}) error {
 func update(table Table, value interface{}, id int) {
 	var stmt *sql.Stmt
 	var res sql.Result
-
-	db, err := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	checkErr(err)
+	var err error
 
 	// update
 	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "UPDATE ", table, " SET nickname=? WHERE id=?"))
@@ -128,10 +121,7 @@ func delete(table Table, id int) {
 	var stmt *sql.Stmt
 	var res sql.Result
 	var affect int64
-
-	db, err := sql.Open("sqlite3", "./forum.db")
-	checkErr(err)
-	defer db.Close()
+	var err error
 
 	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "DELETE FROM ", table, " WHERE id=?"))
 	checkErr(err)
@@ -164,13 +154,16 @@ func CreateTables() string {
 }
 
 func registerBDD(nickname string, email string, hashedpwd string) {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	checkErr(err)
-
 	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd) VALUES (?, ?, ?)")
 	checkErr(err)
 	_, err = stmt.Exec(nickname, email, hashedpwd)
 	checkErr(err)
 
+}
+
+func CreateSession(id_user int, uuid string) {
+	stmt, err := db.Prepare("INSERT INTO SessionControl (uuid, id_user) VALUES (?, ?)")
+	checkErr(err)
+	_, err = stmt.Exec(uuid, id_user)
+	checkErr(err)
 }

@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type popup struct {
@@ -14,6 +17,7 @@ type popup struct {
 	Need    string
 }
 
+var db *sql.DB
 var tpl *template.Template
 
 func init() {
@@ -40,6 +44,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	defer db.Close()
 }
 
 func homehandler(w http.ResponseWriter, r *http.Request) {
@@ -74,18 +79,6 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-
-	//username := "testeur n1"
-	//
-	//C := http.Cookie{
-	//	Name:  "username",
-	//	Value: username,
-	//}
-	//
-	//// cookie : username=testeur n1
-	//r.AddCookie(&C)
-	//
-	//// r.Cookie("username") --> retourne une erreur ou non
 
 }
 
@@ -276,9 +269,22 @@ func LoginToBDD(r *http.Request) {
 	password := r.FormValue("password")
 
 	if CheckPasswordHash(password, queryPassword(email)) {
-		log.Println("Le mdp est valide")
+
+		key := uuid.NewString()
+
+		// A la place de value, je veux qu'un UUID soit créer et mit
+		cookie := http.Cookie{Name: "id", Value: key}
+		http.SetCookie(w, &cookie)
+
+		// Une fois que le cookie est créer, et qu'il est envoyé, je veux récupérer l'ID de l'utilisateur
+		id := queryId(email)
+
+		// Pour ensuite le stocker avec le UUID dans une table session, les deux donc ensemble
+		CreateSession(id, key)
+
+		// Maintenant que ça sera créer, on pourra le récupérer où on veut, en sachant que la valeur de Value
+		// Sera notre UUID, et donc que l'utilisateur aura toujours dans son cookie une des variables de recherche
 	} else {
 		log.Println("Le mdp est incorrect")
 	}
-
 }

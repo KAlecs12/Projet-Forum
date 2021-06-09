@@ -69,3 +69,9 @@ CREATE TABLE UsersBadge (
 	CONSTRAINT fk_badge_id FOREIGN KEY (id_badge) REFERENCES Badge(id)
 );
 
+CREATE TABLE SessionControl (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid TEXT,
+    id_user INTEGER
+);
+
