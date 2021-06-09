@@ -73,7 +73,9 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	content := ""
+	id := "1"
+
+	content := infosU(id)
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")

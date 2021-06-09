@@ -23,13 +23,13 @@ const (
 )
 
 type Users struct {
-	id           int
-	nickname     string
-	email        string
-	role         string
-	biography    string
-	profileImage string
-	status       string
+	Id           int
+	Nickname     string
+	Email        string
+	Role         string
+	Biography    string
+	ProfileImage string
+	Status       string
 }
 
 type Category struct {
@@ -179,8 +179,9 @@ func InitDB() {
 	checkErr(err)
 }
 
-func infosU() Users {
-	query := "SELECT nickname, email, role, biography, profileImage, status FROM Users WHERE id = 1"
+func infosU(id string) Users {
+	query := "SELECT nickname, email, role, biography, profileImage, status FROM Users WHERE id = " + id
+	fmt.Println(query)
 	result, err := db.Query(query)
 	checkErr(err)
 	var nickname, email, role, biography, profileImage, status string
@@ -190,12 +191,12 @@ func infosU() Users {
 		err = result.Scan(&nickname, &email, &role, &biography, &profileImage, &status)
 		checkErr(err)
 		User = Users{
-			nickname:     nickname,
-			email:        email,
-			role:         role,
-			biography:    biography,
-			profileImage: profileImage,
-			status:       status,
+			Nickname:     nickname,
+			Email:        email,
+			Role:         role,
+			Biography:    biography,
+			ProfileImage: profileImage,
+			Status:       status,
 		}
 	}
 	return User

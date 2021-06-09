@@ -23,7 +23,7 @@ func insert(table Table, value interface{}) error {
 		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(nickname, email, role, biography, profileImage, status) values(?,?,?,?,?,?)"))
 		checkErr(err)
 
-		res, err = stmt.Exec(value.(Users).nickname, value.(Users).email, value.(Users).role, value.(Users).biography, value.(Users).profileImage, value.(Users).status)
+		res, err = stmt.Exec(value.(Users).Nickname, value.(Users).Email, value.(Users).Role, value.(Users).Biography, value.(Users).ProfileImage, value.(Users).Status)
 		checkErr(err)
 	case CATEGORY:
 		if fmt.Sprintf("%T", value) != "main.Category" {
