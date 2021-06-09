@@ -157,6 +157,7 @@ func queryUname(username string) bool {
 func queryLogin(username string, email string) bool {
 	database, err := sql.Open("sqlite3", "./forum.db")
 	checkErr(err)
+
 	defer database.Close()
 	verif := `SELECT nickname, email FROM Users WHERE nickname = ? OR email = ?`
 	err = database.QueryRow(verif, username, email).Scan(&username, &email)

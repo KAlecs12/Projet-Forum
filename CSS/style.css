@@ -64,7 +64,7 @@ body {
 }
 
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .flexcss {
         flex-direction: column;
     }
@@ -81,7 +81,7 @@ body {
     width: 60rem;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .connexion {
         width: 40rem;
     }
@@ -98,7 +98,7 @@ body {
     border-radius: 100px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .separation {
         width: 350px;
         height: 5px;
@@ -130,8 +130,7 @@ body {
     flex-direction: column;
     width: 80%;
     height: 400px;
-    background-color: #4a4e6d;
-    box-shadow: 10px 10px 12px #747474;
+    background-color: #25273b;
     border-radius: 5px;
     text-align: center;
     margin: 30px auto 40px;
@@ -168,12 +167,12 @@ body {
     text-shadow: 0 0 3px #000000cc, 0 0 8px #00000080;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .logtosign-text {
         font-size: 30px;
     }
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .logtosign-title {
         font-size: 50px;
     }
@@ -184,14 +183,14 @@ body {
     line-height: 2.25rem;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .phone {
         font-size: 70px;
         line-height: 5rem;
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .phone2 {
         font-size: 40px;
         line-height: 3rem;
@@ -204,7 +203,7 @@ body {
     line-height: 1.25rem;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .inputphone {
         font-size: 2rem;
         line-height: 4rem;
@@ -218,7 +217,7 @@ body {
     background: rgb(50, 49, 49);
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
     .sizebutton {
         height: 100px;
         font-size: 3rem;
@@ -411,14 +410,44 @@ a.button2 {
     border: 1px solid #bf8c40;
     margin: 1.563rem;
     width: 75%;
+    background-color: #00000040;
 }
 
+.col-25 {
+    float: left;
+    width: 15%;
+    margin-top: 20px;
+}
+
+.col-75 {
+    float: left;
+    margin-top: 20px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .col-25, .col-75{
+        width: 100%;
+        margin-top: 0;
+    }
+}
 
 .vertical-line{
     border-left: 2px solid #000;
     display: inline-block;
     height: 400px;
     margin: 0 125px 0 20px;
+}
+
+.menuscroll {
+    width: 35vw;
 }
 
 /*   PARTIE DROITE  */
@@ -647,6 +676,36 @@ a.button2 {
     line-height: 30px;
     -webkit-transition: all 0.2s;
 }
+
+.g-iconmenu-icon2 {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 100%;
+    text-align: center;
+    margin: auto;
+    width: 60px;
+    height: 50px;
+    -webkit-transition: all 0.2s;
+    font-size: xx-large;
+}
+
+.g-iconmenu-item2 {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    text-align: center;
+}
+
 .g-iconmenu span {
     display: block;
 }
@@ -798,7 +857,7 @@ a {
     display: inline-block;
     vertical-align: top;
     width: 16.6666666667%;
-    padding-right: 15px;
+    padding-right: 150px;
 }
 
 .footer-main_item_title {

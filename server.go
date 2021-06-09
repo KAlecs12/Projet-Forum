@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
-
-	//"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
@@ -63,7 +61,7 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/index.html", "./tmpl/header.html")
+	t, err := template.ParseFiles("./static/index.html", "./tmpl/header.html", "./tmpl/footer.html")
 
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
@@ -107,7 +105,7 @@ func signinhandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/signin.html")
+	t, err := template.ParseFiles("./static/signin.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -137,7 +135,7 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/login.html")
+	t, err := template.ParseFiles("./static/login.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -169,7 +167,7 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/account.html")
+	t, err := template.ParseFiles("./static/account.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -195,7 +193,7 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/post.html")
+	t, err := template.ParseFiles("./static/post.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -221,7 +219,7 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/createpost.html")
+	t, err := template.ParseFiles("./static/createpost.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -261,15 +259,15 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 
 	check := queryLogin(nickname, email)
 	if check {
-		// w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		// t, err := template.ParseFiles("./static/signin.html")
-		// UnableLoad(w, err)
+		log.Println("oui")
+		//w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		//t, err := template.ParseFiles("./static/signin.html")
+		//UnableLoad(w, err)
 
-		// TmpPopup.Need = "true"
-		// err = t.Execute(w, TmpPopup)
-		// UnableLoad(w, err)
 	} else {
 		registerBDD(nickname, email, hashedpwd)
+
+		http.Redirect(w, r, "/", 302)
 	}
 }
 
