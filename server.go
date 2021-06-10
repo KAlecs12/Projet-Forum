@@ -3,12 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type popup struct {
@@ -19,6 +18,9 @@ type popup struct {
 
 var db *sql.DB
 var tpl *template.Template
+
+var cookie *http.Cookie
+var id int
 
 func init() {
 	tpl = template.Must(template.ParseGlob("tmpl/*.html"))
@@ -35,6 +37,8 @@ func main() {
 	http.HandleFunc("/account", accounthandler)
 	http.HandleFunc("/post", posthandler)
 	http.HandleFunc("/postcreation", postcreation)
+
+	http.HandleFunc("/logout", logout)
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -66,6 +70,7 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	// sur la page d'accueil, on récupère le template index.html
+
 	t, err := template.ParseFiles("./static/index.html", "./tmpl/header.html", "./tmpl/footer.html")
 
 	if err != nil {
@@ -73,10 +78,13 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	id := "1"
+	//id := "1"
+	//
+	//content := infosU(id)
 
-	content := infosU(id)
-	err = t.Execute(w, content)
+	log.Print(id)
+
+	err = t.Execute(w, id)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -262,7 +270,7 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		registerBDD(nickname, email, hashedpwd)
 
-		http.Redirect(w, r, "/", 302)
+		http.Redirect(w, r, "/login", 302)
 	}
 }
 
@@ -275,18 +283,31 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 		key := uuid.NewString()
 
 		// A la place de value, je veux qu'un UUID soit créer et mit
-		cookie := http.Cookie{Name: "id", Value: key}
-		http.SetCookie(w, &cookie)
+		cookie = &http.Cookie{Name: "id", Value: key}
+		http.SetCookie(w, cookie)
 
 		// Une fois que le cookie est créer, et qu'il est envoyé, je veux récupérer l'ID de l'utilisateur
-		id := queryId(email)
+		id = queryId(email)
 
 		// Pour ensuite le stocker avec le UUID dans une table session, les deux donc ensemble
 		CreateSession(id, key)
+
+		http.Redirect(w, r, "/", 302)
 
 		// Maintenant que ça sera créer, on pourra le récupérer où on veut, en sachant que la valeur de Value
 		// Sera notre UUID, et donc que l'utilisateur aura toujours dans son cookie une des variables de recherche
 	} else {
 		log.Println("Le mdp est incorrect")
 	}
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+
+	id = 0
+	cookie = &http.Cookie{
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, cookie)
+	http.Redirect(w, r, "/", 302)
 }

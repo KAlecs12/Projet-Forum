@@ -62,7 +62,7 @@
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="/post">Random Post</a>
-            <a href="#">{{.Nickname}}</a>
+            <a href="#">About</a>
             <a href="#">Services</a>
             <a href="#">Clients</a>
             <a href="#">Contact</a>
@@ -81,8 +81,17 @@
             </a>
         </div>
 
+        {{if (eq . 0 )}}
 
-        {{template "header"}}
+            {{template "header"}}
+
+        {{end}}
+
+        {{if (gt . 0 )}}
+
+            {{template "header2"}}
+
+        {{end}}
 
     </div>
         <!--    BODY     -->
@@ -94,7 +103,13 @@
             <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
             <a class="item" href="/">Forum</a>
 
-        {{template "login"}}
+        {{if (eq . 0 )}}
+
+            {{template "login"}}
+
+        {{end}}
+
+
     </ol>
 
 

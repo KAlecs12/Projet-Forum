@@ -9,13 +9,16 @@
 
 {{define "header2"}}
 
-        <div class="connectb">
-            <a href="/postcreation" class="button1">Créer un poste</a>
-            <a href="/account" class="button1">Mon compte</a>
-        </div>
+<div class="connectb">
+
+    <form method="post" action="/logout">
+        <button type="submit" class="button1">Se déconnecter</button>
+    </form>
+    <a href="/postcreation" class="button1">Créer un poste</a>
+    <a href="/account" class="button1">Mon compte</a>
+</div>
 
 {{end}}
-
 
 {{define "login"}}
 
