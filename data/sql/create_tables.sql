@@ -26,6 +26,7 @@ CREATE TABLE UsersCat (
 CREATE TABLE Posts (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT NOT NULL,
+	content TEXT NOT NULL,
 	creationDate TIMESTAMP,
 	modificationDate TIMESTAMP,
 	deleteDate TIMESTAMP,

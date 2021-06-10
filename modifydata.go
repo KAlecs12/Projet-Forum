@@ -6,6 +6,7 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
+	"time"
 )
 
 // La fonction insert prend une table et une interface de données pour insérer ces données dans la BDD
@@ -154,16 +155,23 @@ func CreateTables() string {
 }
 
 func registerBDD(nickname string, email string, hashedpwd string) {
-	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd) VALUES (?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd, role) VALUES (?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(nickname, email, hashedpwd)
+	_, err = stmt.Exec(nickname, email, hashedpwd, "User")
 	checkErr(err)
-
 }
 
 func CreateSession(id_user int, uuid string) {
 	stmt, err := db.Prepare("INSERT INTO SessionControl (uuid, id_user) VALUES (?, ?)")
 	checkErr(err)
 	_, err = stmt.Exec(uuid, id_user)
+	checkErr(err)
+}
+
+func CreatePost(id_user int, title string, content string) {
+	creationDate := time.Now()
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users) VALUES (?, ?, ?, ?)")
+	checkErr(err)
+	_, err = stmt.Exec(title, content, creationDate, id_user)
 	checkErr(err)
 }

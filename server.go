@@ -18,7 +18,6 @@ type popup struct {
 
 var db *sql.DB
 var tpl *template.Template
-
 var cookie *http.Cookie
 var id int
 
@@ -77,10 +76,6 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-
-	//id := "1"
-	//
-	//content := infosU(id)
 
 	log.Print(id)
 
@@ -293,7 +288,6 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 		CreateSession(id, key)
 
 		http.Redirect(w, r, "/", 302)
-
 		// Maintenant que ça sera créer, on pourra le récupérer où on veut, en sachant que la valeur de Value
 		// Sera notre UUID, et donc que l'utilisateur aura toujours dans son cookie une des variables de recherche
 	} else {
@@ -304,7 +298,7 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 func logout(w http.ResponseWriter, r *http.Request) {
 
 	id = 0
-	cookie = &http.Cookie{
+	cookie := &http.Cookie{
 		Value:  "",
 		MaxAge: -1,
 	}

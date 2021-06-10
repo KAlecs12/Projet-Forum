@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -179,24 +180,45 @@ func InitDB() {
 	checkErr(err)
 }
 
-func infosU(id string) Users {
-	query := "SELECT nickname, email, role, biography, profileImage, status FROM Users WHERE id = " + id
-	fmt.Println(query)
+func infosU(id int) Users {
+	query := "SELECT nickname, email, role, biography, profileImage, status FROM Users WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var nickname, email, role, biography, profileImage, status string
+	var nicknameBDD, emailBDD, roleBDD, biographyBDD, profileImageBDD, statusBDD interface{}
 	defer result.Close()
 	User := Users{}
 	for result.Next() {
-		err = result.Scan(&nickname, &email, &role, &biography, &profileImage, &status)
+		err = result.Scan(&nicknameBDD, &emailBDD, &roleBDD, &biographyBDD, &profileImageBDD, &statusBDD)
 		checkErr(err)
-		User = Users{
-			Nickname:     nickname,
-			Email:        email,
-			Role:         role,
-			Biography:    biography,
-			ProfileImage: profileImage,
-			Status:       status,
+		if nicknameBDD == nil {
+			User.Nickname = ""
+		} else {
+			User.Nickname = fmt.Sprintf("%v", nicknameBDD)
+		}
+		if emailBDD == nil {
+			User.Email = ""
+		} else {
+			User.Email = fmt.Sprintf("%v", emailBDD)
+		}
+		if roleBDD == nil {
+			User.Role = ""
+		} else {
+			User.Role = fmt.Sprintf("%v", roleBDD)
+		}
+		if biographyBDD == nil {
+			User.Biography = ""
+		} else {
+			User.Biography = fmt.Sprintf("%v", biographyBDD)
+		}
+		if profileImageBDD == nil {
+			User.ProfileImage = ""
+		} else {
+			User.ProfileImage = fmt.Sprintf("%v", profileImageBDD)
+		}
+		if statusBDD == nil {
+			User.Status = ""
+		} else {
+			User.Status = fmt.Sprintf("%v", statusBDD)
 		}
 	}
 	return User
