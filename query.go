@@ -47,18 +47,14 @@ type UsersCat struct {
 type Posts struct {
 	Id               int
 	Title            string
-	Content			 string
+	Content          string
 	CreationDate     time.Time
 	ModificationDate time.Time
 	DeleteDate       time.Time
 	Likes            int
 	Dislikes         int
 	Id_users         int
-}
-
-type PostsCat struct {
-	id_posts    int
-	id_category int
+	Category         string
 }
 
 type Comments struct {
@@ -226,14 +222,14 @@ func infosU(id int) Users {
 }
 
 func infosPost(id int) Posts {
-	query := "SELECT title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users FROM Posts WHERE id = " + strconv.Itoa(id)
+	query := "SELECT title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, category FROM Posts WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users interface{}
+	var title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users, category interface{}
 	defer result.Close()
 	Post := Posts{}
 	for result.Next() {
-		err = result.Scan(&title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users)
+		err = result.Scan(&title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users, &category)
 		checkErr(err)
 		nilTime := time.Time{}
 		if title == nil {
@@ -278,6 +274,11 @@ func infosPost(id int) Posts {
 			Post.Id_users = 0
 		} else {
 			Post.Id_users, err = strconv.Atoi(fmt.Sprintf("%v", id_users))
+		}
+		if category == nil {
+			Post.Category = ""
+		} else {
+			Post.Category = fmt.Sprintf("%v", category)
 		}
 	}
 	return Post

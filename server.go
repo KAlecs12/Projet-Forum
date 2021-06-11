@@ -163,12 +163,6 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	//if CheckPasswordHash(password, queryPassword(email)) {
-	//	// Si c'est bon, on lui associe le cookie
-	//} else {
-	//	// Si c'est pas bon, on lui renvoie une erreur
-	//}
-
 }
 
 func accounthandler(w http.ResponseWriter, r *http.Request) {
@@ -300,7 +294,7 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 		key := uuid.NewString()
 
 		// A la place de value, je veux qu'un UUID soit créer et mit
-		cookie = &http.Cookie{Name: "id", Value: key}
+		cookie = &http.Cookie{Name: "id", Value: key, MaxAge: 1800}
 		http.SetCookie(w, cookie)
 
 		// Une fois que le cookie est créer, et qu'il est envoyé, je veux récupérer l'ID de l'utilisateur
@@ -330,8 +324,11 @@ func logout(w http.ResponseWriter, r *http.Request) {
 func postToBDD(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("lastname")
 	content := r.FormValue("about")
+	category := r.FormValue("country")
 
-	CreatePost(id, title, content)
+	CreatePost(id, title, content, category)
 
 	fmt.Println(infosPost(1))
+
+	http.Redirect(w, r, "/", 302)
 }

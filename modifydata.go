@@ -53,15 +53,6 @@ func insert(table Table, value interface{}) error {
 
 		res, err = stmt.Exec(value.(Posts).Title, value.(Posts).CreationDate, value.(Posts).ModificationDate, value.(Posts).DeleteDate, value.(Posts).Likes, value.(Posts).Dislikes, value.(Posts).Id_users)
 		checkErr(err)
-	case POSTSCAT:
-		if fmt.Sprintf("%T", value) != "main.PostsCat" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(id_posts, id_category) values(?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(PostsCat).id_posts, value.(PostsCat).id_category)
-		checkErr(err)
 	case COMMENTS:
 		if fmt.Sprintf("%T", value) != "main.Comments" {
 			return errors.New("wrong table type")
@@ -168,10 +159,10 @@ func CreateSession(id_user int, uuid string) {
 	checkErr(err)
 }
 
-func CreatePost(id_user int, title string, content string) {
+func CreatePost(id_user int, title string, content string, category string) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users) VALUES (?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users, category) VALUES (?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(title, content, creationDate, id_user)
+	_, err = stmt.Exec(title, content, creationDate, id_user, category)
 	checkErr(err)
 }
