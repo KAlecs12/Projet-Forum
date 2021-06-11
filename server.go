@@ -52,7 +52,25 @@ func main() {
 
 func homehandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
+		//http.Error(w, "404 not found.", http.StatusNotFound)
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+		t, err := template.ParseFiles("./static/errorpage.html")
+
+		if err != nil {
+			fmt.Fprint(w, "Unable to load page.")
+			log.Fatal(err)
+		}
+
+		content := ""
+
+		err = t.Execute(w, content)
+		if err != nil {
+			fmt.Fprint(w, "Unable to load page.")
+			log.Fatal(err)
+		}
+
 		return
 	}
 

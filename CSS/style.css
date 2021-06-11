@@ -129,12 +129,17 @@ body {
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 400px;
+    height: 110px;
     background-color: #25273b;
     border-radius: 5px;
     text-align: center;
     margin: 30px auto 40px;
+}
 
+.textbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .creation {
@@ -145,6 +150,7 @@ body {
     align-items: center;
 
 }
+
 
 /* LOGIN TO SIGN*/
 
@@ -448,7 +454,7 @@ a.button2 {
 }
 
 .menuscroll {
-    width: 35vw;
+    width: 40vw;
 }
 
 /*   PARTIE DROITE  */
