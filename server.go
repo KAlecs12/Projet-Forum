@@ -316,8 +316,7 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 func logout(w http.ResponseWriter, r *http.Request) {
 
 	id = 0
-	cookie := &http.Cookie{
-		Value:  "",
+	cookie = &http.Cookie{
 		MaxAge: -1,
 	}
 	http.SetCookie(w, cookie)
