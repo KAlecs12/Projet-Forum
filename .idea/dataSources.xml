@@ -21,5 +21,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\login\Desktop\Projet-Forum\forum.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="$RFP9BTK" uuid="a4ff1aa9-79b1-4aa5-a19d-efdecde2394f">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\$Recycle.Bin\S-1-5-21-3233636490-4222212525-1928488280-1001\$RFP9BTK.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -51,7 +51,7 @@ func insert(table Table, value interface{}) error {
 		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(title, creationDate, modificationDate, deleteDate, likes, dislikes, id_users) values(?,?,?,?,?,?,?)"))
 		checkErr(err)
 
-		res, err = stmt.Exec(value.(Posts).title, value.(Posts).creationDate, value.(Posts).modificationDate, value.(Posts).deleteDate, value.(Posts).likes, value.(Posts).dislikes, value.(Posts).id_users)
+		res, err = stmt.Exec(value.(Posts).Title, value.(Posts).CreationDate, value.(Posts).ModificationDate, value.(Posts).DeleteDate, value.(Posts).Likes, value.(Posts).Dislikes, value.(Posts).Id_users)
 		checkErr(err)
 	case POSTSCAT:
 		if fmt.Sprintf("%T", value) != "main.PostsCat" {

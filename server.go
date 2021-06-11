@@ -228,6 +228,10 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
+	if r.Method == "POST" {
+		postToBDD(w, r)
+		return
+	}
 	if r.Method != "GET" {
 		http.Error(w, "Method is not supported.", http.StatusNotFound)
 		return
@@ -321,4 +325,13 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 	http.Redirect(w, r, "/", 302)
+}
+
+func postToBDD(w http.ResponseWriter, r *http.Request) {
+	title := r.FormValue("lastname")
+	content := r.FormValue("about")
+
+	CreatePost(id, title, content)
+
+	fmt.Println(infosPost(1))
 }

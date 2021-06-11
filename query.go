@@ -45,14 +45,15 @@ type UsersCat struct {
 }
 
 type Posts struct {
-	id               int
-	title            string
-	creationDate     time.Time
-	modificationDate time.Time
-	deleteDate       time.Time
-	likes            int
-	dislikes         int
-	id_users         int
+	Id               int
+	Title            string
+	Content			 string
+	CreationDate     time.Time
+	ModificationDate time.Time
+	DeleteDate       time.Time
+	Likes            int
+	Dislikes         int
+	Id_users         int
 }
 
 type PostsCat struct {
@@ -222,4 +223,62 @@ func infosU(id int) Users {
 		}
 	}
 	return User
+}
+
+func infosPost(id int) Posts {
+	query := "SELECT title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users FROM Posts WHERE id = " + strconv.Itoa(id)
+	result, err := db.Query(query)
+	checkErr(err)
+	var title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users interface{}
+	defer result.Close()
+	Post := Posts{}
+	for result.Next() {
+		err = result.Scan(&title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users)
+		checkErr(err)
+		nilTime := time.Time{}
+		if title == nil {
+			Post.Title = ""
+		} else {
+			Post.Title = fmt.Sprintf("%v", title)
+		}
+		if content == nil {
+			Post.Content = ""
+		} else {
+			Post.Content = fmt.Sprintf("%v", content)
+		}
+		if creationDate == nil {
+			Post.CreationDate = nilTime
+		} else {
+			Post.CreationDate = creationDate.(time.Time)
+		}
+
+		if modificationDate == nil {
+			Post.ModificationDate = nilTime
+		} else {
+			Post.ModificationDate = modificationDate.(time.Time)
+		}
+		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
+			Post.DeleteDate = nilTime
+		} else {
+			Post.DeleteDate = deleteDate.(time.Time)
+		}
+		if likes == nil {
+			Post.Likes = 0
+		} else {
+			Post.Likes, err = strconv.Atoi(fmt.Sprintf("%v", likes))
+			checkErr(err)
+		}
+		if dislikes == nil {
+			Post.Dislikes = 0
+		} else {
+			Post.Dislikes, err = strconv.Atoi(fmt.Sprintf("%v", dislikes))
+			checkErr(err)
+		}
+		if id_users == nil {
+			Post.Id_users = 0
+		} else {
+			Post.Id_users, err = strconv.Atoi(fmt.Sprintf("%v", id_users))
+		}
+	}
+	return Post
 }
