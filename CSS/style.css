@@ -329,6 +329,7 @@ h2:visited {
 
 .connectb {
     float: right;
+    display: flex;
 }
 
 .capitalize {
