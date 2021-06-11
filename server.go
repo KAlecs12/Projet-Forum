@@ -188,8 +188,8 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := ""
-	err = t.Execute(w, content)
+	Users := infosU(id)
+	err = t.Execute(w, Users)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)

@@ -331,6 +331,10 @@ h2:visited {
     float: right;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
 a.button1 {
     -webkit-appearance: button;
     -moz-appearance: button;
