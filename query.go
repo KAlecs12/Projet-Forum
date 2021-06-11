@@ -55,6 +55,7 @@ type Posts struct {
 	Dislikes         int
 	Id_users         int
 	Category         string
+	Status			 string
 }
 
 type Comments struct {
@@ -222,16 +223,18 @@ func infosU(id int) Users {
 }
 
 func infosPost(id int) Posts {
-	query := "SELECT title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, category FROM Posts WHERE id = " + strconv.Itoa(id)
+	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users, category interface{}
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users, category, status interface{}
 	defer result.Close()
 	Post := Posts{}
 	for result.Next() {
-		err = result.Scan(&title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users, &category)
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users, &category, &status)
 		checkErr(err)
 		nilTime := time.Time{}
+		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
+		Post.Status = fmt.Sprintf("%v", status)
 		if title == nil {
 			Post.Title = ""
 		} else {

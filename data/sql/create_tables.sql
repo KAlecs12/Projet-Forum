@@ -34,6 +34,7 @@ CREATE TABLE Posts (
 	dislikes INTEGER,
 	id_users INTEGER,
 	category TEXT,
+	status TEXT,
 	CONSTRAINT fk_users_id FOREIGN KEY (id_users) REFERENCES Users(id)
 );
 

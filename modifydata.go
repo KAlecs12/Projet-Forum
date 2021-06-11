@@ -161,8 +161,23 @@ func CreateSession(id_user int, uuid string) {
 
 func CreatePost(id_user int, title string, content string, category string) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users, category) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users, category, status) VALUES (?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(title, content, creationDate, id_user, category)
+	_, err = stmt.Exec(title, content, creationDate, id_user, category, "Actif")
+	checkErr(err)
+}
+
+func ModifiedPost(id_post int, content string) {
+	modificationDate := time.Now()
+	stmt, err := db.Prepare("UPDATE Posts SET content = ?, modificationDate = ? WHERE id = ?")
+	checkErr(err)
+	_, err = stmt.Exec(content, modificationDate, id_post)
+	checkErr(err)
+}
+
+func DeletePost(id_post int) {
+	stmt, err := db.Prepare("UPDATE Posts SET Status = ? WHERE id = ?")
+	checkErr(err)
+	_, err = stmt.Exec("Supprimé", id_post)
 	checkErr(err)
 }
