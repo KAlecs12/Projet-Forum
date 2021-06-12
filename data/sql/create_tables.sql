@@ -32,10 +32,11 @@ CREATE TABLE Posts (
 	deleteDate TIMESTAMP,
 	likes INTEGER, 
 	dislikes INTEGER,
-	id_users INTEGER,
+    nickname_users INTEGER,
 	category TEXT,
 	status TEXT,
-	CONSTRAINT fk_users_id FOREIGN KEY (id_users) REFERENCES Users(id)
+    CONSTRAINT fk_category FOREIGN KEY (category) REFERENCES Category(name),
+	CONSTRAINT fk_users_nickname FOREIGN KEY (nickname_users) REFERENCES Users(nickname)
 );
 
 CREATE TABLE PostsCat (

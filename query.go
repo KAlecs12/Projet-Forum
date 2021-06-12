@@ -1,5 +1,6 @@
 package main
 
+import "C"
 import (
 	"database/sql"
 	"fmt"
@@ -34,9 +35,9 @@ type Users struct {
 }
 
 type Category struct {
-	id          int
-	name        string
-	description string
+	Id          int
+	Name        string
+	Description string
 }
 
 type UsersCat struct {
@@ -53,9 +54,9 @@ type Posts struct {
 	DeleteDate       time.Time
 	Likes            int
 	Dislikes         int
-	Id_users         int
+	Nickname_users   string
 	Category         string
-	Status			 string
+	Status           string
 }
 
 type Comments struct {
@@ -223,14 +224,14 @@ func infosU(id int) Users {
 }
 
 func infosPost(id int) Posts {
-	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
+	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, Nickname_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, id_users, category, status interface{}
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nickname_users, category, status interface{}
 	defer result.Close()
 	Post := Posts{}
 	for result.Next() {
-		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &id_users, &category, &status)
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nickname_users, &category, &status)
 		checkErr(err)
 		nilTime := time.Time{}
 		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
@@ -273,10 +274,10 @@ func infosPost(id int) Posts {
 			Post.Dislikes, err = strconv.Atoi(fmt.Sprintf("%v", dislikes))
 			checkErr(err)
 		}
-		if id_users == nil {
-			Post.Id_users = 0
+		if nickname_users == nil {
+			Post.Nickname_users = ""
 		} else {
-			Post.Id_users, err = strconv.Atoi(fmt.Sprintf("%v", id_users))
+			Post.Nickname_users = fmt.Sprintf("%v", nickname_users)
 		}
 		if category == nil {
 			Post.Category = ""
@@ -285,4 +286,163 @@ func infosPost(id int) Posts {
 		}
 	}
 	return Post
+}
+
+func infosPosts() []Posts {
+	var table []Posts
+	query := "SELECT * FROM Posts"
+	result, err := db.Query(query)
+	checkErr(err)
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nickname_users, category, status interface{}
+	defer result.Close()
+	Post := Posts{}
+	for result.Next() {
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nickname_users, &category, &status)
+		checkErr(err)
+		nilTime := time.Time{}
+		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
+		Post.Status = fmt.Sprintf("%v", status)
+		if title == nil {
+			Post.Title = ""
+		} else {
+			Post.Title = fmt.Sprintf("%v", title)
+		}
+		if content == nil {
+			Post.Content = ""
+		} else {
+			Post.Content = fmt.Sprintf("%v", content)
+		}
+		if creationDate == nil {
+			Post.CreationDate = nilTime
+		} else {
+			Post.CreationDate = creationDate.(time.Time)
+		}
+		if modificationDate == nil {
+			Post.ModificationDate = nilTime
+		} else {
+			Post.ModificationDate = modificationDate.(time.Time)
+		}
+		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
+			Post.DeleteDate = nilTime
+		} else {
+			Post.DeleteDate = deleteDate.(time.Time)
+		}
+		if likes == nil {
+			Post.Likes = 0
+		} else {
+			Post.Likes, err = strconv.Atoi(fmt.Sprintf("%v", likes))
+			checkErr(err)
+		}
+		if dislikes == nil {
+			Post.Dislikes = 0
+		} else {
+			Post.Dislikes, err = strconv.Atoi(fmt.Sprintf("%v", dislikes))
+			checkErr(err)
+		}
+		if nickname_users == nil {
+			Post.Nickname_users = ""
+		} else {
+			Post.Nickname_users = fmt.Sprintf("%v", nickname_users)
+		}
+		if category == nil {
+			Post.Category = ""
+		} else {
+			Post.Category = fmt.Sprintf("%v", category)
+		}
+		table = append(table, Post)
+	}
+	return table
+}
+
+func infosCat() []Category {
+	var table []Category
+	query := "SELECT * FROM Category"
+	result, err := db.Query(query)
+	checkErr(err)
+	var id, name, description interface{}
+	defer result.Close()
+	Category := Category{}
+	for result.Next() {
+		err = result.Scan(&id, &name, &description)
+		checkErr(err)
+		Category.Id, err = strconv.Atoi(fmt.Sprintf("%v", id))
+		if name == nil {
+			Category.Name = ""
+		} else {
+			Category.Name = fmt.Sprintf("%v", name)
+		}
+		if description == nil {
+			Category.Description = ""
+		} else {
+			Category.Description = fmt.Sprintf("%v", description)
+		}
+		table = append(table, Category)
+	}
+	return table
+}
+
+func PostFromCategory(querycategory string) []Posts {
+	var table []Posts
+	query := "SELECT * FROM Posts WHERE category = " + querycategory
+	result, err := db.Query(query)
+	checkErr(err)
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nickname_users, category, status interface{}
+	defer result.Close()
+	Post := Posts{}
+	for result.Next() {
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nickname_users, &category, &status)
+		checkErr(err)
+		nilTime := time.Time{}
+		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
+		Post.Status = fmt.Sprintf("%v", status)
+		if title == nil {
+			Post.Title = ""
+		} else {
+			Post.Title = fmt.Sprintf("%v", title)
+		}
+		if content == nil {
+			Post.Content = ""
+		} else {
+			Post.Content = fmt.Sprintf("%v", content)
+		}
+		if creationDate == nil {
+			Post.CreationDate = nilTime
+		} else {
+			Post.CreationDate = creationDate.(time.Time)
+		}
+		if modificationDate == nil {
+			Post.ModificationDate = nilTime
+		} else {
+			Post.ModificationDate = modificationDate.(time.Time)
+		}
+		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
+			Post.DeleteDate = nilTime
+		} else {
+			Post.DeleteDate = deleteDate.(time.Time)
+		}
+		if likes == nil {
+			Post.Likes = 0
+		} else {
+			Post.Likes, err = strconv.Atoi(fmt.Sprintf("%v", likes))
+			checkErr(err)
+		}
+		if dislikes == nil {
+			Post.Dislikes = 0
+		} else {
+			Post.Dislikes, err = strconv.Atoi(fmt.Sprintf("%v", dislikes))
+			checkErr(err)
+		}
+		if nickname_users == nil {
+			Post.Nickname_users = ""
+		} else {
+			Post.Nickname_users = fmt.Sprintf("%v", nickname_users)
+		}
+		if category == nil {
+			Post.Category = ""
+		} else {
+			Post.Category = fmt.Sprintf("%v", category)
+		}
+		table = append(table, Post)
+	}
+	return table
 }

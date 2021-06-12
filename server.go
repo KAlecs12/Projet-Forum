@@ -19,7 +19,9 @@ type popup struct {
 var db *sql.DB
 var tpl *template.Template
 var cookie *http.Cookie
+
 var id int
+var idpost int
 
 func init() {
 	tpl = template.Must(template.ParseGlob("tmpl/*.html"))
@@ -48,6 +50,12 @@ func main() {
 	}
 
 	defer db.Close()
+}
+
+type Homecontent struct {
+	Id       int
+	Infos    []Posts
+	Category []Category
 }
 
 func homehandler(w http.ResponseWriter, r *http.Request) {
@@ -95,9 +103,9 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	log.Print(id)
+	Post := Homecontent{Id: id, Infos: infosPosts(), Category: infosCat()}
 
-	err = t.Execute(w, id)
+	err = t.Execute(w, Post)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -208,8 +216,10 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := ""
-	err = t.Execute(w, content)
+
+	Post := infosPost(1)
+
+	err = t.Execute(w, Post)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -326,9 +336,9 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("about")
 	category := r.FormValue("country")
 
-	CreatePost(id, title, content, category)
+	nickname := infosU(id)
 
-	fmt.Println(infosPost(1))
+	CreatePost(nickname.Nickname, title, content, category)
 
 	http.Redirect(w, r, "/", 302)
 }

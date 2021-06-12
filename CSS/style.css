@@ -392,6 +392,12 @@ a.button2 {
     background: #4a4e6d;
 }
 
+.breadcrumbcatpost {
+    padding: 5px 15px 5px 15px;
+    list-style: none;
+    background: #5e5e67;
+}
+
 .breadcrumb>li {
     display: inline-block;
 }

@@ -33,7 +33,7 @@ func insert(table Table, value interface{}) error {
 		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(name, description) values(?,?)"))
 		checkErr(err)
 
-		res, err = stmt.Exec(value.(Category).name, value.(Category).description)
+		res, err = stmt.Exec(value.(Category).Name, value.(Category).Description)
 		checkErr(err)
 	case USERSCAT:
 		if fmt.Sprintf("%T", value) != "main.UsersCat" {
@@ -48,10 +48,10 @@ func insert(table Table, value interface{}) error {
 		if fmt.Sprintf("%T", value) != "main.Posts" {
 			return errors.New("wrong table type")
 		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(title, creationDate, modificationDate, deleteDate, likes, dislikes, id_users) values(?,?,?,?,?,?,?)"))
+		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(title, creationDate, modificationDate, deleteDate, likes, dislikes, nickname_users) values(?,?,?,?,?,?,?)"))
 		checkErr(err)
 
-		res, err = stmt.Exec(value.(Posts).Title, value.(Posts).CreationDate, value.(Posts).ModificationDate, value.(Posts).DeleteDate, value.(Posts).Likes, value.(Posts).Dislikes, value.(Posts).Id_users)
+		res, err = stmt.Exec(value.(Posts).Title, value.(Posts).CreationDate, value.(Posts).ModificationDate, value.(Posts).DeleteDate, value.(Posts).Likes, value.(Posts).Dislikes, value.(Posts).Nickname_users)
 		checkErr(err)
 	case COMMENTS:
 		if fmt.Sprintf("%T", value) != "main.Comments" {
@@ -159,11 +159,11 @@ func CreateSession(id_user int, uuid string) {
 	checkErr(err)
 }
 
-func CreatePost(id_user int, title string, content string, category string) {
+func CreatePost(nickname_users string, title string, content string, category string) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, id_users, category, status) VALUES (?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, category, status) VALUES (?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(title, content, creationDate, id_user, category, "Actif")
+	_, err = stmt.Exec(title, content, creationDate, nickname_users, category, "Actif")
 	checkErr(err)
 }
 

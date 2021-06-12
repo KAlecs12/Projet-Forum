@@ -4,9 +4,11 @@ VALUES ("Alecs", "alexandre.bruno@ynov.com", "Admin", "Je suis une bio", "", "",
 
 INSERT INTO Category (name, description)
 VALUES ("Presentation", "Presente toi"),
+       ("Reglement", "regles"),
        ("Guide", "Guidons nous"),
        ("Discussion", "Sujet de discussion ouvert"),
        ("Jeux", "Parlons bien, parlons jeux");
 
 INSERT INTO UsersCat (id_users, id_category)
 VALUES (1, 1);
+

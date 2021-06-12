@@ -81,13 +81,13 @@
             </a>
         </div>
 
-        {{if (eq . 0 )}}
+        {{if (eq .Id 0 )}}
 
             {{template "header"}}
 
         {{end}}
 
-        {{if (gt . 0 )}}
+        {{if (gt .Id 0 )}}
 
             {{template "header2"}}
 
@@ -103,7 +103,7 @@
             <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
             <a class="item" href="/">Forum</a>
 
-        {{if (eq . 0 )}}
+        {{if (eq .Id 0 )}}
 
             {{template "login"}}
 
@@ -202,13 +202,25 @@
 
                 <div>
                     <a class="item mr-44">Autheur</a>
-                    <a class="item mr-32">Nb de réponses</a>
+                    <a class="item mr-44">Nb de réponses</a>
+                    <a class="item mr-32">Date de creation</a>
                 </div>
             </ol>
+    {{ range  .Infos  }}
+                <ol class=" flex justify-between breadcrumbcatpost">
+
+                    <a class="item">{{ .Title }}</a>
+
+                    <div>
+                        <a class="item mr-44">{{ .Nickname_users}}</a>
+                        <a class="item mr-44">Nb de réponses</a>
+                        <a class="item mr-32">{{.CreationDate}}</a>
+                    </div>
+                </ol>
+    {{ end }}
         </div>
 
     </div>
-
 
 
                                                     <!--        SLIDER         -->
