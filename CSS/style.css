@@ -129,11 +129,11 @@ body {
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 110px;
+    height: 100%;
     background-color: #25273b;
     border-radius: 5px;
     text-align: center;
-    margin: 30px auto 40px;
+    margin: 0 auto 40px;
 }
 
 .textbox {
@@ -328,7 +328,6 @@ h2:visited {
 
 
 .connectb {
-    float: right;
     display: flex;
 }
 
@@ -340,7 +339,6 @@ a.button1 {
     -webkit-appearance: button;
     -moz-appearance: button;
     text-decoration: none;
-    color: initial;
     margin-left: 30px;
     width: 150px;
     height: 30px;
@@ -364,6 +362,20 @@ a.button2 {
 
 /*   /////    BODY    /////*/
 
+
+.postcontent {
+    border: 1px solid #bf8c40;
+
+}
+
+.auteur {
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    border: 1px solid #bf8c40;
+}
+
 .body-content {
     padding: 0.938rem;
     border: 1px solid #bf8c40;
@@ -381,7 +393,7 @@ a.button2 {
 .breadcrumb {
     padding: 5px 15px 5px 15px;
     list-style: none;
-    margin: 1.563rem;
+    margin: 1.563rem 1.563rem 0 1.563rem;
     background: #4a4e6d;
     box-shadow: 5px 5px 7px #29222f
 }

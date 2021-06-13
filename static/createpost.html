@@ -89,14 +89,14 @@
 
                 <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
 
-                <div  class="post">
+                <div  class="post h-28">
 
                     <div class="row">
                         <div class="col-25">
-                            <label for="country">Catégorie</label>
+                            <label for="category">Catégorie</label>
                         </div>
                         <div class="col-75">
-                            <select class="menuscroll" id="country" name="country">
+                            <select class="menuscroll" id="category" name="category">
                                 {{ range . }}
                                     <option value="{{ .Name }}">{{ .Name }}</option>
                                 {{ end }}
@@ -109,7 +109,7 @@
                             <label for="subject">Sujet</label>
                         </div>
                         <div class="col-75">
-                            <input class="menuscroll" type="text" id="subject" name="lastname" placeholder=" Le nom de ton sujet.." required>
+                            <input class="menuscroll" type="text" id="subject" name="title" placeholder=" Le nom de ton sujet.." required>
                         </div>
                     </div>
 
@@ -117,10 +117,10 @@
 
             <div class="row textbox">
                 <div class="col-25 font-medium text-yellow-600 ">
-                    <label for="subject">Message</label>
+                    <label for="content">Message</label>
                 </div>
                 <div class="col-75 ml-4">
-                    <textarea id="about" name="about" autofocus spellcheck="true" rows="3" class=" border h-24 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
+                    <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class=" border h-24 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
                 </div>
             </div>
 

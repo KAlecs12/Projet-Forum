@@ -11,15 +11,19 @@
 
 <div class="connectb">
 
+
     <form method="post" action="/logout">
         <a class="button1">
             <button type="submit"  >Se déconnecter</button>
         </a>
     </form>
     <a href="/postcreation" class="button1">Créer un poste</a>
-    <a href="/account" class="button1">Mon compte</a>
 </div>
 
+{{end}}
+
+{{define "header3"}}
+    <a href="/account">Mon compte</a>
 {{end}}
 
 {{define "login"}}
@@ -80,6 +84,7 @@
         left: 0;
         top: 0;
         width: 100%; /* Full width */
+        height: 100%;
         overflow: auto;
         background-color: rgb(0,0,0); /* Fallback color */
         background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
@@ -92,7 +97,6 @@
         margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
         border: 1px solid #888;
         width: 40%;
-        height: 30%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -139,7 +143,7 @@
     }
 </style>
 
-<button class="float-right pr-2 pl-2" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+<button class="float-right mr-6 pr-2 pl-2" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
 
     <div id="id01" class="modal">
@@ -150,12 +154,12 @@
                 </div>
 
                 <div class="container">
-                    <label for="email" class="text-center text-xl font-muli text-yellow-400"><b>Email</b></label>
+                    <label for="email" class="float-left text-center text-xl font-muli text-yellow-400"><b>Email</b></label>
                     <input name="email"  type="text" placeholder="Entrer Email" id="email" required>
 
                     <br><br><br>
 
-                    <label for="psw" class="text-center text-xl font-muli text-yellow-400"><b>Mot de passe</b></label>
+                    <label for="psw" class="float-left text-center text-xl font-muli text-yellow-400"><b>Mot de passe</b></label>
                     <input name="password" type="password" placeholder="Entrer Mot de passe" id="psw" required>
 
                     <br>

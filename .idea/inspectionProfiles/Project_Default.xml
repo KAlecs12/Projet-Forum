@@ -35,6 +35,7 @@
         <method importPath="strings" receiver="*Builder" name="WriteRune" />
         <method importPath="math/rand" receiver="*Rand" name="Read" />
         <method importPath="net/http" receiver="*Request" name="ParseForm" />
+        <method importPath="database/sql" receiver="*Rows" name="Close" />
       </methods>
     </inspection_tool>
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">

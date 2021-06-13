@@ -61,11 +61,14 @@
 
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+            {{if (gt .Id 0 )}}
+
+                {{template "header3"}}
+
+            {{end}}
+
             <a href="/post">Random Post</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
         </div>
 
         <!-- Use any element to open the sidenav -->
@@ -76,23 +79,25 @@
                 <div class="burger"></div>
             </div>
 
-            <a href="/" class="title">
-                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
-            </a>
+            {{if (eq .Id 0 )}}
+
+                {{template "header"}}
+
+            {{end}}
+
+            {{if (gt .Id 0 )}}
+
+                {{template "header2"}}
+
+            {{end}}
         </div>
 
-        {{if (eq .Id 0 )}}
 
-            {{template "header"}}
 
-        {{end}}
 
-        {{if (gt .Id 0 )}}
-
-            {{template "header2"}}
-
-        {{end}}
-
+        <a href="/" class="title">
+            <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+        </a>
     </div>
         <!--    BODY     -->
 
@@ -162,9 +167,9 @@
                     <a href="/post?id={{$Info.Id}}" class="item">{{$Info.Title}}</a>
 
                     <div>
-                        <a class="item mr-44">{{$Info.Nickname_users}}</a>
-                        <a class="item mr-44">Nb de réponses</a>
-                        <a class="item mr-32">{{$Info.CreationDate}}</a>
+                        <a class="item mr-48">{{$Info.Nickname_users}}</a>
+                        <a class="item mr-44">Reponses : 5</a>
+                        <a class="item mr-28">{{$Info.CreationDate}}</a>
                     </div>
                 </ol>
 

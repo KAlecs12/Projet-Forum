@@ -48,6 +48,7 @@ CREATE TABLE PostsCat (
 
 CREATE TABLE Comments (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	content TEXT,
 	creationDate TIMESTAMP,
 	modificationDate TIMESTAMP,
 	deleteDate TIMESTAMP,

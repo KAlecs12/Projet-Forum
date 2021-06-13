@@ -57,10 +57,10 @@ func insert(table Table, value interface{}) error {
 		if fmt.Sprintf("%T", value) != "main.Comments" {
 			return errors.New("wrong table type")
 		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(creationDate, modificationDate, deleteDate, likes, dislikes, id_users, id_posts) values(?,?,?,?,?,?,?)"))
+		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, id_posts) values(?,?,?,?,?,?,?,?)"))
 		checkErr(err)
 
-		res, err = stmt.Exec(value.(Comments).creationDate, value.(Comments).modificationDate, value.(Comments).deleteDate, value.(Comments).likes, value.(Comments).dislikes, value.(Comments).id_users, value.(Comments).id_posts)
+		res, err = stmt.Exec(value.(Comments).Content, value.(Comments).CreationDate, value.(Comments).ModificationDate, value.(Comments).DeleteDate, value.(Comments).Likes, value.(Comments).Dislikes, value.(Comments).NicknameUsers, value.(Comments).IdPosts)
 		checkErr(err)
 	case BADGE:
 		if fmt.Sprintf("%T", value) != "main.Badge" {
@@ -179,5 +179,13 @@ func DeletePost(id_post int) {
 	stmt, err := db.Prepare("UPDATE Posts SET Status = ? WHERE id = ?")
 	checkErr(err)
 	_, err = stmt.Exec("Supprimé", id_post)
+	checkErr(err)
+}
+
+func CreateComment(nickname_users string, content string, post int) {
+	creationDate := time.Now()
+	stmt, err := db.Prepare("INSERT INTO Comments (content, creationDate, id_users, id_posts ) VALUES (?, ?, ?, ?)")
+	checkErr(err)
+	_, err = stmt.Exec(content, creationDate, nickname_users, post)
 	checkErr(err)
 }

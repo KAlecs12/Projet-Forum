@@ -17,6 +17,18 @@ type popup struct {
 	Need    string
 }
 
+type Homecontent struct {
+	Id       int
+	Infos    []Posts
+	Category []Category
+}
+
+type allPost struct {
+	User    Users
+	Posts   Posts
+	Comment []Comments
+}
+
 var db *sql.DB
 var tpl *template.Template
 var cookie *http.Cookie
@@ -51,12 +63,6 @@ func main() {
 	}
 
 	defer db.Close()
-}
-
-type Homecontent struct {
-	Id       int
-	Infos    []Posts
-	Category []Category
 }
 
 func homehandler(w http.ResponseWriter, r *http.Request) {
@@ -200,16 +206,24 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+////////////////      INFOS POSTS       ////////////////
+
 func posthandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
-	id := r.Form.Get("id")
-	idint, err := strconv.Atoi(id)
+	idpost := r.Form.Get("id")
+	idpostint, err := strconv.Atoi(idpost)
 
 	if r.URL.Path != "/post" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
+
+	if r.Method == "POST" {
+		commentToBDD(w, r, idpostint)
+		return
+	}
+
 	if r.Method != "GET" {
 		http.Error(w, "Method is not supported.", http.StatusNotFound)
 		return
@@ -217,15 +231,15 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// sur la page d'accueil, on récupère le template index.html
-	t, err := template.ParseFiles("./static/post.html", "./tmpl/footer.html")
+	t, err := template.ParseFiles("./static/post.html", "./tmpl/header.html", "./tmpl/footer.html")
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
 
-	Post := infosPost(idint)
+	fmt.Println(infosU(id))
 
-	err = t.Execute(w, Post)
+	err = t.Execute(w, allPost{User: infosU(id), Posts: infosPost(idpostint), Comment: infosComments()})
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -262,6 +276,8 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+///////////      FUNCTION CONNEXION       ///////////////
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
@@ -338,13 +354,22 @@ func logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func postToBDD(w http.ResponseWriter, r *http.Request) {
-	title := r.FormValue("lastname")
-	content := r.FormValue("about")
-	category := r.FormValue("country")
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+	category := r.FormValue("category")
 
 	nickname := infosU(id)
 
 	CreatePost(nickname.Nickname, title, content, category)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func commentToBDD(w http.ResponseWriter, r *http.Request, idpost int) {
+	content := r.FormValue("content")
+	nickname := infosU(id)
+
+	CreateComment(nickname.Nickname, content, idpost)
 
 	http.Redirect(w, r, "/", 302)
 }

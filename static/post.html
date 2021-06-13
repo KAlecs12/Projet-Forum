@@ -61,14 +61,6 @@
             </a>
         </div>
 
-
-        <div class="connectb">
-            <a href="/postcreation" class="button1">Créer un poste</a>
-            <a href="/account" class="button1">Mon compte</a>
-            <a href="/login" class="button1">Se connecter</a>
-            <a href="/signin" class="button2">S'inscrire</a>
-        </div>
-
     </div>
     <!--    BODY     -->
 
@@ -86,29 +78,101 @@
         <li class="item">&nbsp; → &nbsp; </li>
         <li>
 
-            <a class="item" href="/login">Article</a>
+            <a class="item" href="/login">{{.Posts.Category}}</a>
+        </li>
+
+        <li class="item">&nbsp; → &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">{{.Posts.Title}}</a>
         </li>
 
     </ol>
 
 
-    <div class="body-content">
 
         <div class="creation">
 
-            <div class="mt-6">{{.Title}}</div>
-
-            <hr noshade style=" margin-top:15px; width:25%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
-
             <div  class="post">
 
-            <div>{{.Content}}</div>
+                <div class="connectb mt-10 justify-between">
+                    <a href="/" class="button1 text-yellow-700">Retour</a>
+                    {{if (eq .User.Id 0 )}}
+
+                        {{template "login"}}
+
+                    {{end}}
+                </div>
+
+
+                <ol class="breadcrumb border rounded-md w-1/3 mt-8 float-left">
+
+                    <div class="flex justify-center underline"><div class="font-bold">{{.Posts.Category}} : </div>&nbsp; {{.Posts.Title}}</div>
+
+                </ol>
+
+
+                <div class="body-content">
+                    <div class="flex justify-between">
+
+                        <div class=" flex flex-col postcontent pl-6 pr-6">
+
+                            <div class="text-white">{{.Posts.Nickname_users}}</div>
+                            <div class="auteur">Auteur du sujet </div>
+                        </div>
+
+                        <div class="postcontent w-full pt-16 pb-16 pr-28 pl-28 ml-4">
+                            <div>{{.Posts.Content}}</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {{ $Posts := .Posts }}
+                {{ $Comment := .Comment }}
+                {{ range $Comments := $Comment }}
+                    {{ if (eq $Comments.IdPosts $Posts.Id) }}
+
+                        <div class="body-content">
+                            <div class="flex justify-between">
+
+                                <div class=" flex flex-col postcontent pl-6 pr-6">
+
+                                    <div class="text-white">{{$Comments.NicknameUsers}}</div>
+
+                                </div>
+
+                                <div class="postcontent w-full pt-16 pb-16 pr-28 pl-28 ml-4">
+                                    <div>{{$Comments.Content}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    {{ end }}
+                {{ end }}
+
+                <form class="body-content" method="post">
+                    <div class="row textbox">
+                        <div class="font-medium text-yellow-600 ">
+                            <label for="content">Repondre au sujet :</label>
+                        </div>
+                        <div class="col-75 ml-4">
+                            <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class=" border h-24 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                    </div>
+
+                </form>
 
             </div>
 
         </div>
 
-    </div>
+
 
     {{template "footer"}}
 
