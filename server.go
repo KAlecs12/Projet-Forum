@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type popup struct {
@@ -200,6 +201,11 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func posthandler(w http.ResponseWriter, r *http.Request) {
+
+	r.ParseForm()
+	id := r.Form.Get("id")
+	idint, err := strconv.Atoi(id)
+
 	if r.URL.Path != "/post" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
@@ -217,7 +223,7 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	Post := infosPost(1)
+	Post := infosPost(idint)
 
 	err = t.Execute(w, Post)
 	if err != nil {

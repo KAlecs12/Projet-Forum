@@ -148,7 +148,7 @@
                 <a class="item">{{ $Categories.Name }}</a>
 
                 <div>
-                    <a class="item mr-44">Autheur</a>
+                    <a class="item mr-44">Auteur</a>
                     <a class="item mr-44">Nb de réponses</a>
                     <a class="item mr-32">Date de creation</a>
                 </div>
@@ -159,12 +159,12 @@
 
                 <ol class=" flex justify-between breadcrumbcatpost">
 
-                    <a class="item">{{$Info.Title}}</a>
+                    <a href="/post?id={{$Info.Id}}" class="item">{{$Info.Title}}</a>
 
                     <div>
-                        <a class="item mr-44"></a>
+                        <a class="item mr-44">{{$Info.Nickname_users}}</a>
                         <a class="item mr-44">Nb de réponses</a>
-                        <a class="item mr-32"></a>
+                        <a class="item mr-32">{{$Info.CreationDate}}</a>
                     </div>
                 </ol>
 
