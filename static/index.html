@@ -135,70 +135,17 @@
         </div>
 
 
-                                    <!--   REGLES    -->
-
-<!--1-->
-        <div class="category">
-
-            <ol class=" flex justify-between breadcrumbcat">
-
-                <a class="item">Règlement du Forum</a>
-                <div>
-                    <a class="item mr-44">Autheur</a>
-                    <a class="item mr-32">Nb de réponses</a>
-                </div>
-            </ol>
-        </div>
-
+                                    <!--   CATEGORY    -->
         <br>
 
-<!--2-->
-
+        {{ $Category := .Category }}
+        {{ $Infos := .Infos }}
+        {{ range $Categories := $Category}}
         <div class="category">
 
             <ol class=" flex justify-between breadcrumbcat">
 
-                <a class="item">Guides pour débutant</a>
-
-                <div>
-                    <a class="item mr-44">Autheur</a>
-                    <a class="item mr-32">Nb de réponses</a>
-                </div>
-
-                <!--Aide jeux ... -->
-
-            </ol>
-        </div>
-
-    <br>
-<!--3-->
-        <div class="category">
-
-            <ol class=" flex justify-between breadcrumbcat">
-
-                <a class="item">Informations !</a>
-
-                <div>
-                    <a class="item mr-44">Autheur</a>
-                    <a class="item mr-32">Nb de réponses</a>
-                </div>
-
-            </ol>
-
-                <!--  News   /   Présentation   /   plainte, remarque, aide, suggestion-->
-
-        </div>
-
-
-        <br>
-
-
-<!--4-->
-        <div class="category">
-
-            <ol class=" flex justify-between breadcrumbcat">
-
-                <a class="item">Espace discussion</a>
+                <a class="item">{{ $Categories.Name }}</a>
 
                 <div>
                     <a class="item mr-44">Autheur</a>
@@ -206,20 +153,29 @@
                     <a class="item mr-32">Date de creation</a>
                 </div>
             </ol>
-    {{ range  .Infos  }}
+
+            {{range $Info := $Infos}}
+            {{ if ( eq $Info.Category $Categories.Name) }}
+
                 <ol class=" flex justify-between breadcrumbcatpost">
 
-                    <a class="item">{{ .Title }}</a>
+                    <a class="item">{{$Info.Title}}</a>
 
                     <div>
-                        <a class="item mr-44">{{ .Nickname_users}}</a>
+                        <a class="item mr-44"></a>
                         <a class="item mr-44">Nb de réponses</a>
-                        <a class="item mr-32">{{.CreationDate}}</a>
+                        <a class="item mr-32"></a>
                     </div>
                 </ol>
-    {{ end }}
+
+            {{end}}
+            {{end}}
+
         </div>
 
+        <br>
+
+        {{ end }}
     </div>
 
 

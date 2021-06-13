@@ -248,7 +248,7 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := ""
+	content := infosCat()
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")

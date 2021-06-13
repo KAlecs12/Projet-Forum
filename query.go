@@ -356,6 +356,7 @@ func infosPosts() []Posts {
 
 func infosCat() []Category {
 	var table []Category
+
 	query := "SELECT * FROM Category"
 	result, err := db.Query(query)
 	checkErr(err)

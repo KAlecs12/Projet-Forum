@@ -97,11 +97,9 @@
                         </div>
                         <div class="col-75">
                             <select class="menuscroll" id="country" name="country">
-                                <option value="reglement">Reglement</option>
-                                <option value="presentation">Présentations</option>
-                                <option value="guide">Guides</option>
-                                <option value="discussion">Discussions</option>
-                                <option value="jeux">Jeux</option>
+                                {{ range . }}
+                                    <option value="{{ .Name }}">{{ .Name }}</option>
+                                {{ end }}
                             </select>
                         </div>
                     </div>
