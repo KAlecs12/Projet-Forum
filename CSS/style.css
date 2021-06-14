@@ -142,6 +142,10 @@ body {
     align-items: center;
 }
 
+.bg-comment {
+    background: #363954;
+}
+
 .creation {
 
     display: flex;

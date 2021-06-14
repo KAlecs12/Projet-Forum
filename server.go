@@ -66,6 +66,7 @@ func main() {
 }
 
 func homehandler(w http.ResponseWriter, r *http.Request) {
+
 	if r.URL.Path != "/" {
 		//http.Error(w, "404 not found.", http.StatusNotFound)
 

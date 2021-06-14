@@ -92,8 +92,8 @@
                 <div class="rounded-md -space-y-px inscrire">
                     <div>
                         <label for="pseudo" class="text-yellow-400 float-left mb-0.5">*Pseudo</label>
-                        <input id="pseudo" name="pseudo" type="text" autocomplete="current-pseudo" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Votre nom">
-                        <label for="pseudo" class="text-gray-800">Note: Ceci sera votre pseudo d'affichage. 3 caractères minimum </label>
+                        <input id="pseudo" name="pseudo" type="text" minlength="3" maxlength="15" autocomplete="current-pseudo" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Votre nom">
+                        <label for="pseudo" class="text-gray-800">Note: Ceci sera votre pseudo d'affichage. 3 caractères minimum / 15 caractères maximum</label>
                     </div>
 
                     <div>
@@ -106,7 +106,7 @@
                     <div>
                         <br>
                         <label for="password" class="text-yellow-400 float-left mb-0.5">*Mot de passe</label>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Mot de passe">
+                        <input id="password" name="password" type="password" minlength="6"  autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Mot de passe">
                         <label for="password" class="text-gray-800">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
                     </div>
 

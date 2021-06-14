@@ -57,6 +57,7 @@ type Posts struct {
 	Nickname_users   string
 	Category         string
 	Status           string
+	CommentCount     int
 }
 
 type Comments struct {
@@ -226,19 +227,19 @@ func infosPost(id int) Posts {
 			Post.CreationDate = ""
 		} else {
 			t := creationDate.(time.Time)
-			Post.CreationDate = t.Format("2006-01-02 15:04:05")
+			Post.CreationDate = t.Format("02 January 2006 15:04")
 		}
 		if modificationDate == nil {
 			Post.ModificationDate = ""
 		} else {
 			t := modificationDate.(time.Time)
-			Post.ModificationDate = t.Format("2006-01-02 15:04:05")
+			Post.ModificationDate = t.Format("02 January 2006 15:04")
 		}
 		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
 			Post.DeleteDate = ""
 		} else {
 			t := deleteDate.(time.Time)
-			Post.DeleteDate = t.Format("2006-01-02 15:04:05")
+			Post.DeleteDate = t.Format("02 January 2006 15:04")
 		}
 		if likes == nil {
 			Post.Likes = 0
@@ -294,19 +295,19 @@ func infosPosts() []Posts {
 			Post.CreationDate = ""
 		} else {
 			t := creationDate.(time.Time)
-			Post.CreationDate = t.Format("2006-01-02 15:04:05")
+			Post.CreationDate = t.Format("02 January 2006 15:04")
 		}
 		if modificationDate == nil {
 			Post.ModificationDate = ""
 		} else {
 			t := modificationDate.(time.Time)
-			Post.ModificationDate = t.Format("2006-01-02 15:04:05")
+			Post.ModificationDate = t.Format("02 January 2006 15:04")
 		}
 		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
 			Post.DeleteDate = ""
 		} else {
 			t := deleteDate.(time.Time)
-			Post.DeleteDate = t.Format("2006-01-02 15:04:05")
+			Post.DeleteDate = t.Format("02 January 2006 15:04")
 		}
 		if likes == nil {
 			Post.Likes = 0
@@ -330,6 +331,7 @@ func infosPosts() []Posts {
 		} else {
 			Post.Category = fmt.Sprintf("%v", category)
 		}
+		Post.CommentCount = countComments(Post.Id)
 		table = append(table, Post)
 	}
 	return table
@@ -385,19 +387,19 @@ func infosComments() []Comments {
 			Comments.CreationDate = ""
 		} else {
 			t := creationDate.(time.Time)
-			Comments.CreationDate = t.Format("2006-01-02 15:04:05")
+			Comments.CreationDate = t.Format("02 January 2006 15:04")
 		}
 		if modificationDate == nil {
 			Comments.ModificationDate = ""
 		} else {
 			t := modificationDate.(time.Time)
-			Comments.ModificationDate = t.Format("2006-01-02 15:04:05")
+			Comments.ModificationDate = t.Format("02 January 2006 15:04")
 		}
 		if fmt.Sprintf("%T", deleteDate) != "time.Time" {
 			Comments.DeleteDate = ""
 		} else {
 			t := deleteDate.(time.Time)
-			Comments.DeleteDate = t.Format("2006-01-02 15:04:05")
+			Comments.DeleteDate = t.Format("02 January 2006 15:04")
 		}
 		if likes == nil {
 			Comments.Likes = 0
@@ -425,4 +427,19 @@ func infosComments() []Comments {
 		table = append(table, Comments)
 	}
 	return table
+}
+
+func countComments(id_post int) int {
+	queryComments := "SELECT id FROM Comments WHERE id_posts = \"" + strconv.Itoa(id_post) + "\""
+	result, err := db.Query(queryComments)
+	checkErr(err)
+	var id int
+	var count int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&id)
+		checkErr(err)
+		count++
+	}
+	return count
 }

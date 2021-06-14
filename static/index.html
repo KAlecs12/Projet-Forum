@@ -153,12 +153,11 @@
                 <a class="item">{{ $Categories.Name }}</a>
 
                 <div>
-                    <a class="item mr-44">Auteur</a>
+                    <a class="item mr-44 pr-1">Auteur</a>
                     <a class="item mr-44">Nb de réponses</a>
-                    <a class="item mr-32">Date de creation</a>
+                    <a class="item mr-28 pr-2">Date de creation</a>
                 </div>
             </ol>
-
             {{range $Info := $Infos}}
             {{ if ( eq $Info.Category $Categories.Name) }}
 
@@ -168,7 +167,7 @@
 
                     <div>
                         <a class="item mr-48">{{$Info.Nickname_users}}</a>
-                        <a class="item mr-44">Reponses : 5</a>
+                        <a class="item mr-44">Reponses : {{$Info.CommentCount}}</a>
                         <a class="item mr-28">{{$Info.CreationDate}}</a>
                     </div>
                 </ol>

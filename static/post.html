@@ -112,7 +112,7 @@
                 </ol>
 
 
-                <div class="body-content">
+                <div class="body-content bg-comment">
                     <div class="flex justify-between">
 
                         <div class=" flex flex-col postcontent pl-6 pr-6">
@@ -133,16 +133,21 @@
                 {{ range $Comments := $Comment }}
                     {{ if (eq $Comments.IdPosts $Posts.Id) }}
 
-                        <div class="body-content">
+                        <div class="body-content bg-comment">
                             <div class="flex justify-between">
 
                                 <div class=" flex flex-col postcontent pl-6 pr-6">
 
                                     <div class="text-white">{{$Comments.NicknameUsers}}</div>
 
+                                    {{ if ( eq $Comments.NicknameUsers $Posts.Nickname_users) }}
+                                    <div class="auteur">Auteur du sujet </div>
+                                    {{ end }}
+
                                 </div>
 
-                                <div class="postcontent w-full pt-16 pb-16 pr-28 pl-28 ml-4">
+                                <div class="postcontent w-full ml-4">
+                                    <div class="">{{ $Comments.CreationDate }}</div>
                                     <div>{{$Comments.Content}}</div>
                                 </div>
 
@@ -152,22 +157,40 @@
                     {{ end }}
                 {{ end }}
 
-                <form class="body-content" method="post">
+
+                {{ if ( gt .User.Id 0 ) }}
+
+                    <form class="body-content bg-comment" method="post">
+                        <div class="row textbox">
+                            <div class="font-medium text-yellow-600 ">
+                                <label for="content">Repondre au sujet :</label>
+                            </div>
+                            <div class="col-75 ml-4">
+                                <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class="resize-none border h-52 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                        </div>
+
+                    </form>
+
+                {{ end }}
+
+                {{ if ( eq .User.Id 0 ) }}
+
+                <div class="body-content bg-comment">
                     <div class="row textbox">
                         <div class="font-medium text-yellow-600 ">
-                            <label for="content">Repondre au sujet :</label>
-                        </div>
-                        <div class="col-75 ml-4">
-                            <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class=" border h-24 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
+                            <a href="/login" class="text-blue-400">Connectez-vous </a>
+                            <label>pour pouvoir participer au sujet de discussion</label>
                         </div>
                     </div>
 
-                    <div class="flex justify-center">
-                        <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
-                    </div>
+                </div>
 
-                </form>
-
+                {{ end }}
             </div>
 
         </div>
