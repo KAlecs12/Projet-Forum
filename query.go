@@ -337,6 +337,44 @@ func infosPosts() []Posts {
 	return table
 }
 
+///////// LIKES DISLIKES /////////
+
+func queryLikes(id_post int) {
+	queryLikeBDD := "SELECT likes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
+	result, err := db.Query(queryLikeBDD)
+	checkErr(err)
+	var nblikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nblikes)
+		checkErr(err)
+	}
+	nblikes++
+	updatelikes, err := db.Prepare("UPDATE Posts SET likes = ? WHERE id = ?")
+	checkErr(err)
+	_, err = updatelikes.Exec(nblikes, id_post)
+	checkErr(err)
+}
+
+func queryDislikes(id_post int) {
+	queryDislikeBDD := "SELECT dislikes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
+	result, err := db.Query(queryDislikeBDD)
+	checkErr(err)
+	var nbdislikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nbdislikes)
+		checkErr(err)
+	}
+	nbdislikes++
+	updatedislikes, err := db.Prepare("UPDATE Posts SET dislikes = ? WHERE id = ?")
+	checkErr(err)
+	_, err = updatedislikes.Exec(nbdislikes, id_post)
+	checkErr(err)
+}
+
+////////// CATEGORY /////////////
+
 func infosCat() []Category {
 	var table []Category
 

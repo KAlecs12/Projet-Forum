@@ -159,6 +159,22 @@ func CreateSession(id_user int, uuid string) {
 	checkErr(err)
 }
 
+func CreateCat(name string) {
+	if name != "" {
+		stmt, err := db.Prepare("INSERT INTO Category (name) VALUES (?)")
+		checkErr(err)
+		_, err = stmt.Exec(name)
+		checkErr(err)
+	}
+}
+
+func DeleteCat(name string) {
+	stmt, err := db.Prepare("DELETE FROM Category WHERE name = ?")
+	checkErr(err)
+	_, err = stmt.Exec(name)
+	checkErr(err)
+}
+
 func CreatePost(nickname_users string, title string, content string, category string) {
 	creationDate := time.Now()
 	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, category, status) VALUES (?, ?, ?, ?, ?, ?)")

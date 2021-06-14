@@ -18,7 +18,7 @@ type popup struct {
 }
 
 type Homecontent struct {
-	Id       int
+	Users    Users
 	Infos    []Posts
 	Category []Category
 }
@@ -51,6 +51,7 @@ func main() {
 	http.HandleFunc("/account", accounthandler)
 	http.HandleFunc("/post", posthandler)
 	http.HandleFunc("/postcreation", postcreation)
+	http.HandleFunc("/modifcat", modifcat)
 
 	http.HandleFunc("/logout", logout)
 
@@ -111,7 +112,7 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	Post := Homecontent{Id: id, Infos: infosPosts(), Category: infosCat()}
+	Post := Homecontent{Users: infosU(id), Infos: infosPosts(), Category: infosCat()}
 
 	err = t.Execute(w, Post)
 	if err != nil {
@@ -200,6 +201,45 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 	}
 	Users := infosU(id)
 	err = t.Execute(w, Users)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+}
+
+type ModifCat struct {
+	Users    Users
+	Category []Category
+}
+
+func modifcat(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/modifcat" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+	if r.Method == "POST" {
+		if r.FormValue("cat") != "" {
+			catToBDD(w, r)
+		} else {
+			catdelBDD(w, r)
+		}
+		return
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// sur la page d'accueil, on récupère le template index.html
+	t, err := template.ParseFiles("./static/modifcat.html", "./tmpl/footer.html")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+	err = t.Execute(w, ModifCat{Users: infosU(id), Category: infosCat()})
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -362,6 +402,24 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	nickname := infosU(id)
 
 	CreatePost(nickname.Nickname, title, content, category)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func catToBDD(w http.ResponseWriter, r *http.Request) {
+
+	cat := r.FormValue("cat")
+
+	CreateCat(cat)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func catdelBDD(w http.ResponseWriter, r *http.Request) {
+
+	cat := r.FormValue("delete")
+
+	DeleteCat(cat)
 
 	http.Redirect(w, r, "/", 302)
 }

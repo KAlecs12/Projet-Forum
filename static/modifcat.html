@@ -1,0 +1,252 @@
+
+{{ if (eq .Users.Role "Admin")}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Astulpho - Ajout de catégorie</title>
+    <link href="/CSS/style.css" rel="stylesheet"/>
+    <link href="/CSS/tailwind.css" rel="stylesheet"/>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+<a name="haut"></a>
+<div id="main">
+
+    <script>
+
+        //  SIDENAV
+
+        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
+
+    </script>
+
+
+
+    <!--    HEADER       -->
+
+    <div class="section">
+
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="/post">Random Post</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Clients</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <!-- Use any element to open the sidenav -->
+        <div class="start">
+            <div class="bigburger" onclick="openNav()">
+                <div class="burger"></div>
+                <div class="burger"></div>
+                <div class="burger"></div>
+            </div>
+
+            <a href="/" class="title">
+                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+            </a>
+        </div>
+
+
+    </div>
+    <!--    BODY     -->
+
+    <ol class="breadcrumb">
+
+        <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+        <a class="item" href="/">Forum</a>
+
+        <li class="item">&nbsp; → &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">Modif de Catégorie ( Admin only )</a>
+        </li>
+
+    </ol>
+
+    <div class="body">
+        <!--    PARTIE GAUCHE    -->
+        <div class="gauche rounded-md">
+
+            <form class="creation" method="POST">
+
+                <div class="font-sherif text-4xl mt-6 text-yellow-600">NOUVELLE CATEGORIE</div>
+
+                <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
+
+                <div  class="post h-28">
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="subject">Catégorie</label>
+                        </div>
+                        <div class="col-75">
+                            <input class="menuscroll" type="text" id="subject" name="cat" minlength="3" placeholder=" Le nom de ta nouvelle categorie..." required>
+                            <label class="text-gray-800">Note: Merci d'insérer une catégorie. (3 caractères minimum).</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+                <br>
+
+                <div class="flex justify-center">
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                </div>
+
+            </form>
+
+            <form class="creation" method="POST">
+
+                <div class="font-sherif text-4xl mt-6 text-yellow-600">SUPPRIMER UNE CATEGORIE</div>
+
+                <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
+
+                <div  class="post h-28">
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="category">Catégorie</label>
+                        </div>
+                        <div class="col-75">
+                            <select class="menuscroll" id="category" name="delete">
+                                {{ range .Category }}
+                                    <option value="{{ .Name }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+                <br>
+
+                <div class="flex justify-center">
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    {{template "footer"}}
+
+</body>
+</html>
+{{ else }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page introuvable</title>
+    <link href="/CSS/style.css" rel="stylesheet"/>
+    <link href="/CSS/tailwind.css" rel="stylesheet"/>
+
+</head>
+
+<style>
+
+    html {
+        background: #6b6770;
+    }
+
+    .error {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        font-size: 130px;
+        font-weight: 700;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        top: 150px;
+        bottom: 150px;
+    }
+
+    .error404 {
+        margin-right: 50%;
+        color: #e5b040;
+        font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+        text-shadow: -2px 0 #1f1f1f;
+    }
+
+    .colorerror{
+        text-shadow: -8px 0px 20px #1f1f1f;
+        margin-right: 27%;
+        font-size: 20px;
+        color: #b9bbbe;
+        line-height: 35px;
+        text-align: left;
+        font-weight: 300;
+    }
+
+    a {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+</style>
+
+<body>
+
+
+
+<!--    BODY     -->
+<br>
+<ol class="breadcrumb mt-0">
+
+    <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+    <a class="item" href="/">Forum</a>
+
+    <li class="item">&nbsp; ? &nbsp; </li>
+    <li>
+
+        <a class="item" href="/login">Autorisation refusée</a>
+    </li>
+
+</ol>
+
+<!--    PARTIE ERROR   -->
+
+<div class="error">
+
+    <div class="error404 ml-56 pl-56"> ERREUR D'AUTHORISATION</div>
+    <div class="colorerror">
+        Mince ! <br>
+        Vous vous êtes perdu ?<br>
+        Malheureusement, il semblerait que la page demandé ne soit pas accessible ou inexistante ! :O<br>
+        La seule chose que je peux vous proposer c'est d'essayer de cliquer sur ces liens ci-dessous, ils pourraient vous guider vers la bonne voie.
+
+        <div>
+            <br>
+            <a href="/">→ &nbsp; Accueil</a><br>
+            <a href="/account">→ &nbsp; Profil</a>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
+
+{{ end }}

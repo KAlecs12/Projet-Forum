@@ -6,11 +6,11 @@ INSERT INTO Category (name, description)
 VALUES ("Règlement", "règles"),
        ("Présentations", "Présente toi"),
        ("Discussions", "Sujet de discussion ouvert"),
-       ("Guides", "Guidons nous"),
-       ("Jeux", "Parlons bien, parlons jeux");
+       ("Espace aide / guide", "Guidons nous"),
+       ("Divertissement en tout genre / Jeux Video", "Parlons bien, parlons jeux");
 
 INSERT INTO UsersCat (id_users, id_category)
 VALUES (1, 1);
 
 INSERT INTO Posts (title, content, creationDate, likes, dislikes, nickname_users, category, status)
-VALUES ("Règlement de vie", "Bonjour, ici il y a quelques règles a respecter...", '2021-06-14 15:40:00', 0, 0, "Admin", "Règlement", "Actif");
+VALUES ("Règles de vie", "Bonjour, ici il y a quelques règles a respecter...", '2021-06-14 15:40:00', 0, 0, "Admin", "Règlement", "Actif");

@@ -62,11 +62,17 @@
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-            {{if (gt .Id 0 )}}
+            {{if (gt .Users.Id 0 )}}
 
-                {{template "header3"}}
+                <a href="/account">Mon compte</a>
 
             {{end}}
+
+            {{ if (eq .Users.Role "Admin")}}
+
+                <a href="/modifcat">Modifier une categorie</a>
+
+            {{ end }}
 
             <a href="/post">Random Post</a>
         </div>
@@ -79,13 +85,13 @@
                 <div class="burger"></div>
             </div>
 
-            {{if (eq .Id 0 )}}
+            {{if (eq .Users.Id 0 )}}
 
                 {{template "header"}}
 
             {{end}}
 
-            {{if (gt .Id 0 )}}
+            {{if (gt .Users.Id 0 )}}
 
                 {{template "header2"}}
 
@@ -108,7 +114,7 @@
             <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
             <a class="item" href="/">Forum</a>
 
-        {{if (eq .Id 0 )}}
+        {{if (eq .Users.Id 0 )}}
 
             {{template "login"}}
 

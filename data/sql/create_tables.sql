@@ -13,7 +13,7 @@ CREATE TABLE Users (
 CREATE TABLE Category (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL,
-	description TEXT NOT NULL
+	description TEXT
 );
 
 CREATE TABLE UsersCat (
