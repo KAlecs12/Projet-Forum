@@ -80,3 +80,26 @@ CREATE TABLE SessionControl (
     id_user INTEGER
 );
 
+CREATE TABLE LikesPosts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_post INTEGER,
+    id_user INTEGER
+);
+
+CREATE TABLE DislikesPosts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_post INTEGER,
+    id_user INTEGER
+);
+
+CREATE TABLE LikesComments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_post INTEGER,
+    id_user INTEGER
+);
+
+CREATE TABLE DislikesComments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_post INTEGER,
+    id_user INTEGER
+);

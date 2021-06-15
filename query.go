@@ -339,7 +339,7 @@ func infosPosts() []Posts {
 
 ///////// LIKES DISLIKES /////////
 
-func queryLikes(id_post int) {
+func LikesPost(id_post int) {
 	queryLikeBDD := "SELECT likes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
 	result, err := db.Query(queryLikeBDD)
 	checkErr(err)
@@ -356,7 +356,7 @@ func queryLikes(id_post int) {
 	checkErr(err)
 }
 
-func queryDislikes(id_post int) {
+func DislikesPost(id_post int) {
 	queryDislikeBDD := "SELECT dislikes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
 	result, err := db.Query(queryDislikeBDD)
 	checkErr(err)
@@ -370,6 +370,40 @@ func queryDislikes(id_post int) {
 	updatedislikes, err := db.Prepare("UPDATE Posts SET dislikes = ? WHERE id = ?")
 	checkErr(err)
 	_, err = updatedislikes.Exec(nbdislikes, id_post)
+	checkErr(err)
+}
+
+func LikesComments(id_comment int) {
+	queryLikeBDD := "SELECT likes FROM Posts WHERE id = \"" + strconv.Itoa(id_comment) + "\""
+	result, err := db.Query(queryLikeBDD)
+	checkErr(err)
+	var nblikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nblikes)
+		checkErr(err)
+	}
+	nblikes++
+	updatelikes, err := db.Prepare("UPDATE Posts SET likes = ? WHERE id = ?")
+	checkErr(err)
+	_, err = updatelikes.Exec(nblikes, id_comment)
+	checkErr(err)
+}
+
+func DislikesComments(id_comment int) {
+	queryDislikeBDD := "SELECT dislikes FROM Comments WHERE id = \"" + strconv.Itoa(id_comment) + "\""
+	result, err := db.Query(queryDislikeBDD)
+	checkErr(err)
+	var nbdislikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nbdislikes)
+		checkErr(err)
+	}
+	nbdislikes++
+	updatedislikes, err := db.Prepare("UPDATE Comments SET dislikes = ? WHERE id = ?")
+	checkErr(err)
+	_, err = updatedislikes.Exec(nbdislikes, id_comment)
 	checkErr(err)
 }
 
@@ -480,4 +514,24 @@ func countComments(id_post int) int {
 		count++
 	}
 	return count
+}
+
+func getIdSession(uuid string) int {
+	queryid := "SELECT id FROM SessionControl"
+	result, err := db.Query(queryid)
+	checkErr(err)
+	var id_user interface{}
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&id_user)
+		checkErr(err)
+		if id_user == nil {
+			return 0
+		} else {
+			intId, err := strconv.Atoi(fmt.Sprintf("%v", id_user))
+			checkErr(err)
+			return intId
+		}
+	}
+	return 0
 }

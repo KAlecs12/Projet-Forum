@@ -33,7 +33,6 @@ var db *sql.DB
 var tpl *template.Template
 var cookie *http.Cookie
 
-var id int
 var idpost int
 
 func init() {
@@ -111,6 +110,8 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
+
+	id := getUserSession(w, r)
 
 	Post := Homecontent{Users: infosU(id), Infos: infosPosts(), Category: infosCat()}
 
@@ -211,6 +212,9 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
+
+	id := getUserSession(w, r)
+
 	Users := infosU(id)
 	err = t.Execute(w, Users)
 	if err != nil {
@@ -255,6 +259,8 @@ func modifcat(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	id := getUserSession(w, r)
+
 	err = t.Execute(w, ModifCat{Users: infosU(id), Category: infosCat()})
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
@@ -293,6 +299,8 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
+
+	id := getUserSession(w, r)
 
 	fmt.Println(infosU(id))
 
@@ -378,6 +386,8 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
+	id := getUserSession(w, r)
+
 	if CheckPasswordHash(password, queryPassword(email)) {
 
 		key := uuid.NewString()
@@ -401,9 +411,9 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-
-	id = 0
 	cookie = &http.Cookie{
+		Name:   "id",
+		Value:  "",
 		MaxAge: -1,
 	}
 	http.SetCookie(w, cookie)
@@ -415,6 +425,8 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	category := r.FormValue("category")
 
+	id := getUserSession(w, r)
+
 	nickname := infosU(id)
 
 	CreatePost(nickname.Nickname, title, content, category)
@@ -422,7 +434,7 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
-func pseudoModifBDD(w http.ResponseWriter, r *http.Request) {
+/* func pseudoModifBDD(w http.ResponseWriter, r *http.Request) {
 
 	pseudo := r.FormValue("pseudo")
 
@@ -439,6 +451,7 @@ func emailModifBDD(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", 302)
 }
+*/
 
 func catToBDD(w http.ResponseWriter, r *http.Request) {
 
@@ -469,10 +482,23 @@ func catdelBDD(w http.ResponseWriter, r *http.Request) {
 }
 
 func commentToBDD(w http.ResponseWriter, r *http.Request, idpost int) {
+
+	id := getUserSession(w, r)
+
 	content := r.FormValue("content")
 	nickname := infosU(id)
 
 	CreateComment(nickname.Nickname, content, idpost)
 
 	http.Redirect(w, r, "/", 302)
+}
+
+func getUserSession(w http.ResponseWriter, r *http.Request) int {
+	cookie, err := r.Cookie("id")
+	if err != nil || cookie == nil {
+		return 0
+	} else {
+		uuid := cookie.Value
+		return getIdSession(uuid)
+	}
 }
