@@ -212,3 +212,17 @@ func CreateComment(nickname_users string, content string, post int) {
 	_, err = stmt.Exec(content, creationDate, nickname_users, post)
 	checkErr(err)
 }
+
+func Modifypseudo(pseudo string, newpseudo string) {
+	stmt, err := db.Prepare("UPDATE Users SET nickname = ? WHERE nickname = ?")
+	checkErr(err)
+	_, err = stmt.Exec(newpseudo, pseudo)
+	checkErr(err)
+}
+
+func Modifyemail(email string, newemail string) {
+	stmt, err := db.Prepare("UPDATE Users SET email = ? WHERE email = ?")
+	checkErr(err)
+	_, err = stmt.Exec(newemail, email)
+	checkErr(err)
+}

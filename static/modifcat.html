@@ -92,20 +92,22 @@
                         <div class="col-25">
                             <label for="subject">Catégorie</label>
                         </div>
-                        <div class="col-75">
-                            <input class="menuscroll" type="text" id="subject" name="cat" minlength="3" placeholder=" Le nom de ta nouvelle categorie..." required>
+                        <div class="flex flex-col pb-4">
+                            <div class="col-75">
+                                <input class="menuscroll" type="text" id="subject" name="cat" minlength="3" placeholder=" Le nom de ta nouvelle categorie..." required>
+                            </div>
+                            <label class="text-white">Note: Merci d'insérer une catégorie. (3 caractères minimum).</label>
                         </div>
-                        <label class="text-gray-800">Note: Merci d'insérer une catégorie. (3 caractères minimum).</label>
                     </div>
 
                 </div>
 
-                <br>
-                <br>
-
                 <div class="flex justify-center">
-                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ajouter cette catégorie</button>
                 </div>
+
+                <br>
+                <br>
 
             </form>
 
@@ -115,34 +117,36 @@
 
                 <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
 
-                <div  class="post h-28">
+                <div  class="post content-center h-28">
 
                     <div class="row">
-                        <div class="col-25">
-                            <label for="category2">Catégorie</label>
+                        <div class="col-25 pt-4">
+                            <label>Catégorie</label>
                         </div>
-                        <div class="col-75">
-                            <select class="menuscroll" id="category2" name="name">
-                                {{ range .Category }}
-                                <option value="{{ .Name }}">{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                        <div class="col-75">
-                            <input class="menuscroll" type="text"  name="newname" minlength="3" placeholder=" Le nouveau nom de ta categorie..." required>
+                        <div class="flex flex-col pb-4">
+                            <div class="col-75">
+                                <select class="menuscroll"  name="name">
+                                    {{ range .Category }}
+                                    <option value="{{ .Name }}">{{ .Name }}</option>
+                                    {{ end }}
+                                </select>
+                            </div>
+                            <div class="col-75">
+                                <input class="menuscroll" type="text"  name="newname" minlength="3" placeholder=" Le nouveau nom de ta categorie..." required>
+                            </div>
                         </div>
                     </div>
 
                 </div>
 
-                <br>
-                <br>
-
                 <div class="flex justify-center">
-                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Modifier cette catégorie</button>
                 </div>
 
             </form>
+
+            <br>
+            <br>
 
             <form class="creation" method="POST">
 
@@ -150,7 +154,7 @@
 
                 <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
 
-                <div  class="post h-28">
+                <div  class="post h-16">
 
                     <div class="row">
                         <div class="col-25">
@@ -167,11 +171,8 @@
 
                 </div>
 
-                <br>
-                <br>
-
                 <div class="flex justify-center">
-                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Supprimer cette catégorie</button>
                 </div>
 
             </form>

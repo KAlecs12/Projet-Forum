@@ -18,6 +18,11 @@
 
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            {{ if (eq .Role "Admin")}}
+
+                <a href="/modifcat">Modifier une categorie</a>
+
+            {{ end }}
             <a href="/post">Random Post</a>
         </div>
 
@@ -55,11 +60,11 @@
         <div class="md:grid md:grid-cols-3 md:gap-6 mb-4 mt-4 mr-4">
             <div class="md:col-span-1">
                 <div class="px-4 sm:px-0 ml-5">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Paramètres du profil</h3>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">Paramètres du compte</h3>
                 </div>
             </div>
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <form action="#" method="POST">
+                <form method="POST">
                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                             <div class="grid grid-cols-3 gap-6">

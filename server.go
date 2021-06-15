@@ -187,6 +187,18 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
+
+	if r.Method == "POST" {
+
+		if r.FormValue("pseudo") != "" {
+			catToBDD(w, r)
+		} else if r.FormValue("email") != "" {
+			catModifBDD(w, r)
+		}
+
+		return
+	}
+
 	if r.Method != "GET" {
 		http.Error(w, "Method is not supported.", http.StatusNotFound)
 		return
@@ -406,6 +418,24 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	nickname := infosU(id)
 
 	CreatePost(nickname.Nickname, title, content, category)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func pseudoModifBDD(w http.ResponseWriter, r *http.Request) {
+
+	pseudo := r.FormValue("pseudo")
+
+	ModifiedCat(pseudo, newcat)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func emailModifBDD(w http.ResponseWriter, r *http.Request) {
+
+	email := r.FormValue("email")
+
+	ModifiedCat(email, newcat)
 
 	http.Redirect(w, r, "/", 302)
 }
