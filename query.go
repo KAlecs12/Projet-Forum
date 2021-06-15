@@ -517,7 +517,7 @@ func countComments(id_post int) int {
 }
 
 func getIdSession(uuid string) int {
-	queryid := "SELECT id FROM SessionControl"
+	queryid := "SELECT id_user FROM SessionControl WHERE uuid = \"" + uuid + "\""
 	result, err := db.Query(queryid)
 	checkErr(err)
 	var id_user interface{}

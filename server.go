@@ -192,9 +192,10 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
 		if r.FormValue("pseudo") != "" {
-			catToBDD(w, r)
-		} else if r.FormValue("email") != "" {
-			catModifBDD(w, r)
+			pseudoModifBDD(w, r)
+		}
+		if r.FormValue("email") != "" {
+			emailModifBDD(w, r)
 		}
 
 		return
@@ -434,24 +435,29 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
-/* func pseudoModifBDD(w http.ResponseWriter, r *http.Request) {
+func pseudoModifBDD(w http.ResponseWriter, r *http.Request) {
 
-	pseudo := r.FormValue("pseudo")
+	newpseudo := r.FormValue("pseudo")
 
-	ModifiedCat(pseudo, newcat)
+	id := getUserSession(w, r)
+	user := infosU(id)
 
-	http.Redirect(w, r, "/", 302)
+	Modifypseudo(newpseudo, user.Nickname)
+
+	http.Redirect(w, r, "/account", 302)
 }
 
 func emailModifBDD(w http.ResponseWriter, r *http.Request) {
 
-	email := r.FormValue("email")
+	newemail := r.FormValue("email")
 
-	ModifiedCat(email, newcat)
+	id := getUserSession(w, r)
+	user := infosU(id)
 
-	http.Redirect(w, r, "/", 302)
+	Modifyemail(newemail, user.Email)
+
+	http.Redirect(w, r, "/account", 302)
 }
-*/
 
 func catToBDD(w http.ResponseWriter, r *http.Request) {
 
