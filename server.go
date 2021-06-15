@@ -59,10 +59,10 @@ func main() {
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
 	fmt.Printf("Starting server at port 8080\n")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	err := http.ListenAndServeTLS(":8080", "https-server.crt", "https-server.key", nil)
+	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer db.Close()
 }
 
@@ -219,11 +219,15 @@ func modifcat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == "POST" {
+
 		if r.FormValue("cat") != "" {
 			catToBDD(w, r)
+		} else if r.FormValue("newname") != "" {
+			catModifBDD(w, r)
 		} else {
 			catdelBDD(w, r)
 		}
+
 		return
 	}
 	if r.Method != "GET" {
@@ -411,6 +415,16 @@ func catToBDD(w http.ResponseWriter, r *http.Request) {
 	cat := r.FormValue("cat")
 
 	CreateCat(cat)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func catModifBDD(w http.ResponseWriter, r *http.Request) {
+
+	cat := r.FormValue("name")
+	newcat := r.FormValue("newname")
+
+	ModifiedCat(cat, newcat)
 
 	http.Redirect(w, r, "/", 302)
 }

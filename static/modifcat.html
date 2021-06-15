@@ -44,10 +44,6 @@
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="/post">Random Post</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
         </div>
 
         <!-- Use any element to open the sidenav -->
@@ -98,7 +94,42 @@
                         </div>
                         <div class="col-75">
                             <input class="menuscroll" type="text" id="subject" name="cat" minlength="3" placeholder=" Le nom de ta nouvelle categorie..." required>
-                            <label class="text-gray-800">Note: Merci d'insérer une catégorie. (3 caractères minimum).</label>
+                        </div>
+                        <label class="text-gray-800">Note: Merci d'insérer une catégorie. (3 caractères minimum).</label>
+                    </div>
+
+                </div>
+
+                <br>
+                <br>
+
+                <div class="flex justify-center">
+                    <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre le message</button>
+                </div>
+
+            </form>
+
+            <form class="creation" method="POST">
+
+                <div class="font-sherif text-4xl mt-6 text-yellow-600">MODIFIER UNE CATEGORIE</div>
+
+                <hr noshade style=" margin-top:30px; width:20%; height:3px; margin-bottom: 15px; border:1px black; border-radius: 100px;">
+
+                <div  class="post h-28">
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="category2">Catégorie</label>
+                        </div>
+                        <div class="col-75">
+                            <select class="menuscroll" id="category2" name="name">
+                                {{ range .Category }}
+                                <option value="{{ .Name }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                        <div class="col-75">
+                            <input class="menuscroll" type="text"  name="newname" minlength="3" placeholder=" Le nouveau nom de ta categorie..." required>
                         </div>
                     </div>
 

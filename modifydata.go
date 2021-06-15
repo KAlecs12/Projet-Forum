@@ -168,6 +168,13 @@ func CreateCat(name string) {
 	}
 }
 
+func ModifiedCat(name string, newname string) {
+	stmt, err := db.Prepare("UPDATE Category SET name = ? WHERE name = ?")
+	checkErr(err)
+	_, err = stmt.Exec(newname, name)
+	checkErr(err)
+}
+
 func DeleteCat(name string) {
 	stmt, err := db.Prepare("DELETE FROM Category WHERE name = ?")
 	checkErr(err)
