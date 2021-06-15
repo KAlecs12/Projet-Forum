@@ -53,6 +53,9 @@ func main() {
 	http.HandleFunc("/modifcat", modifcat)
 
 	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/like", likehandler)
+	http.HandleFunc("/dislike", dislikehandler)
+
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -506,5 +509,25 @@ func getUserSession(w http.ResponseWriter, r *http.Request) int {
 	} else {
 		uuid := cookie.Value
 		return getIdSession(uuid)
+	}
+}
+
+func likehandler(w http.ResponseWriter, r *http.Request) {
+
+	id := getUserSession(w, r)
+
+	if r.Method == "POST" {
+		Like(1, id, "Posts")
+		http.Redirect(w, r, "/post?id=id_post", 302) // Ici pour la redirection, c'est en gros la page du post
+	}
+}
+
+func dislikehandler(w http.ResponseWriter, r *http.Request) {
+
+	id := getUserSession(w, r)
+
+	if r.Method == "POST" {
+		Dislike(1, id, "Posts")
+		http.Redirect(w, r, "/post?id=1", 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }

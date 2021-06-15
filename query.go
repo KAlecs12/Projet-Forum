@@ -339,8 +339,8 @@ func infosPosts() []Posts {
 
 ///////// LIKES DISLIKES /////////
 
-func LikesPost(id_post int) {
-	queryLikeBDD := "SELECT likes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
+func LikesUpdate(id_post int, table string, ToUp bool) {
+	queryLikeBDD := "SELECT likes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
 	result, err := db.Query(queryLikeBDD)
 	checkErr(err)
 	var nblikes int
@@ -349,15 +349,20 @@ func LikesPost(id_post int) {
 		err = result.Scan(&nblikes)
 		checkErr(err)
 	}
-	nblikes++
-	updatelikes, err := db.Prepare("UPDATE Posts SET likes = ? WHERE id = ?")
+	if ToUp {
+		nblikes++
+	} else {
+		nblikes--
+	}
+	query := "UPDATE " + table + " SET likes = ? WHERE id = ?"
+	updatelikes, err := db.Prepare(query)
 	checkErr(err)
 	_, err = updatelikes.Exec(nblikes, id_post)
 	checkErr(err)
 }
 
-func DislikesPost(id_post int) {
-	queryDislikeBDD := "SELECT dislikes FROM Posts WHERE id = \"" + strconv.Itoa(id_post) + "\""
+func DislikesUpdate(id_post int, table string, ToUp bool) {
+	queryDislikeBDD := "SELECT dislikes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
 	result, err := db.Query(queryDislikeBDD)
 	checkErr(err)
 	var nbdislikes int
@@ -366,45 +371,115 @@ func DislikesPost(id_post int) {
 		err = result.Scan(&nbdislikes)
 		checkErr(err)
 	}
-	nbdislikes++
-	updatedislikes, err := db.Prepare("UPDATE Posts SET dislikes = ? WHERE id = ?")
+	if ToUp {
+		nbdislikes++
+	} else {
+		nbdislikes--
+	}
+	query := "UPDATE " + table + " SET dislikes = ? WHERE id = ?"
+	updatedislikes, err := db.Prepare(query)
 	checkErr(err)
 	_, err = updatedislikes.Exec(nbdislikes, id_post)
 	checkErr(err)
 }
 
-func LikesComments(id_comment int) {
-	queryLikeBDD := "SELECT likes FROM Posts WHERE id = \"" + strconv.Itoa(id_comment) + "\""
-	result, err := db.Query(queryLikeBDD)
-	checkErr(err)
-	var nblikes int
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&nblikes)
+func Like(id_post int, id_user int, table string) {
+	liketype := "Like"
+	var err error
+	verif := tableSelect(table, liketype)
+	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
+	if err == sql.ErrNoRows {
+		insert := tableInsert(table, liketype)
+		stmt, err := db.Prepare(insert)
 		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		LikesUpdate(id_post, table, true)
+	} else if err == nil {
+		delete := tableDelete(table, liketype)
+		stmt, err := db.Prepare(delete)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		LikesUpdate(id_post, table, false)
+	} else {
+		log.Fatal(err)
 	}
-	nblikes++
-	updatelikes, err := db.Prepare("UPDATE Posts SET likes = ? WHERE id = ?")
-	checkErr(err)
-	_, err = updatelikes.Exec(nblikes, id_comment)
-	checkErr(err)
 }
 
-func DislikesComments(id_comment int) {
-	queryDislikeBDD := "SELECT dislikes FROM Comments WHERE id = \"" + strconv.Itoa(id_comment) + "\""
-	result, err := db.Query(queryDislikeBDD)
-	checkErr(err)
-	var nbdislikes int
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&nbdislikes)
+func Dislike(id_post int, id_user int, table string) {
+	liketype := "Dislike"
+	var err error
+	verif := tableSelect(table, liketype)
+	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
+	if err == sql.ErrNoRows {
+		insert := tableInsert(table, liketype)
+		stmt, err := db.Prepare(insert)
 		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		DislikesUpdate(id_post, table, true)
+	} else if err == nil {
+		delete := tableDelete(table, liketype)
+		stmt, err := db.Prepare(delete)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		DislikesUpdate(id_post, table, false)
+	} else {
+		log.Fatal(err)
 	}
-	nbdislikes++
-	updatedislikes, err := db.Prepare("UPDATE Comments SET dislikes = ? WHERE id = ?")
-	checkErr(err)
-	_, err = updatedislikes.Exec(nbdislikes, id_comment)
-	checkErr(err)
+}
+
+func tableSelect(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return `SELECT id_post, id_user FROM LikesPosts WHERE id_post = ? AND id_user = ?`
+		} else {
+			return `SELECT id_post, id_user FROM DislikesPosts WHERE id_post = ? AND id_user = ?`
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return `SELECT id_post, id_user FROM LikesComments WHERE id_post = ? AND id_user = ?`
+		} else {
+			return `SELECT id_post, id_user FROM DislikesComments WHERE id_post = ? AND id_user = ?`
+		}
+	}
+	return ""
+}
+
+func tableInsert(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return "INSERT INTO LikesPosts (id_post, id_user) VALUES (?, ?)"
+		} else {
+			return "INSERT INTO DislikesPosts (id_post, id_user) VALUES (?, ?)"
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return "INSERT INTO LikesComments (id_post, id_user) VALUES (?, ?)"
+		} else {
+			return "INSERT INTO DislikesComments (id_post, id_user) VALUES (?, ?)"
+		}
+	}
+	return ""
+}
+
+func tableDelete(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return "DELETE FROM LikesPosts WHERE id_post = ? AND id_user = ?"
+		} else {
+			return "DELETE FROM DislikesPosts WHERE id_post = ? AND id_user = ?"
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return "DELETE FROM LikesComments WHERE id_post = ? AND id_user = ?"
+		} else {
+			return "DELETE FROM DislikesComments WHERE id_post = ? AND id_user = ?"
+		}
+	}
+	return ""
 }
 
 ////////// CATEGORY /////////////

@@ -147,12 +147,21 @@
                                     <div>{{$Comments.Content}}</div>
                                 </div>
 
+
+
                             </div>
                         </div>
 
                     {{ end }}
                 {{ end }}
 
+                <form method="POST" class="flex justify-center" action="/like">
+                    <button nametype="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Like</button>
+                </form>
+
+                <form method="POST" class="flex justify-center" action="/dislike">
+                    <button nametype="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dislike</button>
+                </form>
 
                 {{ if ( gt .User.Id 0 ) }}
 
