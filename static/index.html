@@ -165,20 +165,20 @@
                 </div>
             </ol>
             {{range $Info := $Infos}}
-            {{ if ( eq $Info.Category $Categories.Name) }}
+                {{ if ( eq $Info.Category $Categories.Name) }}
+                    {{ if ( eq $Info.Status "Actif") }}
+                    <ol class=" flex justify-between breadcrumbcatpost">
 
-                <ol class=" flex justify-between breadcrumbcatpost">
+                        <a href="/post?id={{$Info.Id}}" class="item">{{$Info.Title}}</a>
 
-                    <a href="/post?id={{$Info.Id}}" class="item">{{$Info.Title}}</a>
-
-                    <div>
-                        <a class="item mr-48">{{$Info.Nickname_users}}</a>
-                        <a class="item mr-44">Reponses : {{$Info.CommentCount}}</a>
-                        <a class="item mr-28">{{$Info.CreationDate}}</a>
-                    </div>
-                </ol>
-
-            {{end}}
+                        <div>
+                            <a class="item mr-48">{{$Info.Nickname_users}}</a>
+                            <a class="item mr-44">Reponses : {{$Info.CommentCount}}</a>
+                            <a class="item mr-28">{{$Info.CreationDate}}</a>
+                        </div>
+                    </ol>
+                    {{ end }}
+                {{end}}
             {{end}}
 
         </div>

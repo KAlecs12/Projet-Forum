@@ -12,9 +12,8 @@ import (
 )
 
 type popup struct {
-	Title   string
-	Content string
-	Need    string
+	Link string
+	Name string
 }
 
 type Homecontent struct {
@@ -24,6 +23,7 @@ type Homecontent struct {
 }
 
 type allPost struct {
+	Test    string
 	User    Users
 	Posts   Posts
 	Comment []Comments
@@ -38,8 +38,7 @@ var db *sql.DB
 var tpl *template.Template
 var cookie *http.Cookie
 
-var idpost int
-var idpostlike int
+var idpost string
 
 func init() {
 	tpl = template.Must(template.ParseGlob("tmpl/*.html"))
@@ -62,6 +61,7 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/like", likehandler)
 	http.HandleFunc("/dislike", dislikehandler)
+	http.HandleFunc("/supprpost", supprpost)
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -310,9 +310,8 @@ func modifcat(w http.ResponseWriter, r *http.Request) {
 func posthandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
-	idpost := r.Form.Get("id")
+	idpost = r.Form.Get("id")
 	idpostint, err := strconv.Atoi(idpost)
-	idpostlike = idpostint
 
 	if r.URL.Path != "/post" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
@@ -577,27 +576,33 @@ func catdelBDD(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
-func commentToBDD(w http.ResponseWriter, r *http.Request, idpost int) {
+func commentToBDD(w http.ResponseWriter, r *http.Request, id_post int) {
 
 	id := getUserSession(w, r)
+	url := "/post?id=" + idpost
 
 	content := r.FormValue("content")
 	nickname := infosU(id)
 
-	CreateComment(nickname.Nickname, content, idpost)
+	CreateComment(nickname.Nickname, content, id_post)
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, url, 302)
 }
 
 func likehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
+	idpostint, err := strconv.Atoi(idpost)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
 
-	url := "/post?id=" + strconv.Itoa(idpostlike)
+	url := "/post?id=" + idpost
 
 	if r.Method == "POST" {
-		fmt.Println(idpostlike)
-		Like(idpostlike, id, "Posts")
+
+		Like(idpostint, id, "Posts")
 		http.Redirect(w, r, url, 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }
@@ -605,12 +610,32 @@ func likehandler(w http.ResponseWriter, r *http.Request) {
 func dislikehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
+	idpostint, err := strconv.Atoi(idpost)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
 
-	url := "/post?id=" + strconv.Itoa(idpostlike)
+	url := "/post?id=" + idpost
 
 	if r.Method == "POST" {
-		fmt.Println(idpostlike)
-		Dislike(idpostlike, id, "Posts")
+
+		Dislike(idpostint, id, "Posts")
 		http.Redirect(w, r, url, 302) // Ici pour la redirection, c'est en gros la page du post
+	}
+}
+
+func supprpost(w http.ResponseWriter, r *http.Request) {
+
+	idpostint, err := strconv.Atoi(idpost)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+	if r.Method == "POST" {
+
+		DeletePost(idpostint)
+		http.Redirect(w, r, "/", 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }

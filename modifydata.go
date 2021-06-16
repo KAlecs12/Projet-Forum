@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-
 // La fonction CreateTables permet de réinitialiser les tables en les supprimant et en les recréant, seules les tables précisées dans le code sont touchées
 func CreateTables() string {
 
