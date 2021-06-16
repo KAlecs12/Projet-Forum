@@ -30,6 +30,9 @@
             document.getElementById("main").style.marginLeft = "0";
         }
 
+        function getURL() {
+            alert("Lien du post : " + window.location.href)
+        }
 
     </script>
 
@@ -183,6 +186,7 @@
                     {{ end }}
                 {{ end }}
 
+                <button onclick="getURL()">Partager</button>
 
                 {{ if ( gt .User.Id 0 ) }}
 
