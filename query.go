@@ -11,6 +11,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+////////// STRUCTURES /////////////
+
 type Table string
 
 const (
@@ -84,6 +86,19 @@ type UsersBadge struct {
 	id_badge int
 }
 
+// La fonction InitDB permet de réinitialiser la base de données, puis de recréer les tables nécessaires, avec les informations par défaut
+func InitDB() {
+	var err error
+	db, err = sql.Open("sqlite3", "./forum.db")
+	checkErr(err)
+
+	createBDD := CreateTables()
+	_, err = db.Exec(createBDD)
+	checkErr(err)
+}
+
+////////// USERS /////////////
+
 // La fonction queryEmail prend en paramètre un email et va vérifier si il existe un utilisateur avec cet email dans la base de données
 func queryId(email string) int {
 	query := "SELECT id FROM Users WHERE email = \"" + email + "\""
@@ -114,11 +129,11 @@ func queryLogin(username string, email string) bool {
 	return true
 }
 
+// La fonction queryEmail permet de vérifier si un utilisateur possède un email correspond à celui envoyé en paramètre
 func queryEmail(email string) bool {
 	var err error
 	verif := `SELECT email FROM Users WHERE email = ?`
 	err = db.QueryRow(verif, email).Scan(&email)
-
 	if err != nil {
 		if err != sql.ErrNoRows {
 			log.Print(err)
@@ -128,6 +143,7 @@ func queryEmail(email string) bool {
 	return true
 }
 
+// La fonction queryPassword permet de récupérer le mot de passe haché en fonction de l'email
 func queryPassword(email string) string {
 	query := "SELECT hashedpwd FROM Users WHERE email = \"" + email + "\""
 	result, err := db.Query(query)
@@ -142,17 +158,7 @@ func queryPassword(email string) string {
 	return hashedpwd
 }
 
-// La fonction InitDB permet de réinitialiser la base de données, puis de recréer les tables nécessaires, avec les informations par défaut
-func InitDB() {
-	var err error
-	db, err = sql.Open("sqlite3", "./forum.db")
-	checkErr(err)
-
-	createBDD := CreateTables()
-	_, err = db.Exec(createBDD)
-	checkErr(err)
-}
-
+// La fonction infosU permet de récupérer une structure de Users en fonction de l'Id de celui-ci
 func infosU(id int) Users {
 	query := "SELECT id, nickname, email, squestion, role, biography, profileImage, status FROM Users WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
@@ -204,6 +210,7 @@ func infosU(id int) Users {
 	return User
 }
 
+// La fonction infosU2 permet de récupérer une structure de Users en fonction de l'email de celui-ci
 func infosU2(email string) Users {
 	query := "SELECT id, nickname, email, squestion, role, biography, profileImage, status FROM Users WHERE email = \"" + email + "\""
 	result, err := db.Query(query)
@@ -255,6 +262,216 @@ func infosU2(email string) Users {
 	return User
 }
 
+///////// LIKES DISLIKES /////////
+
+// LikesUpdate permet d'augmenter ou de diminuer le nombre de likes sur un post ou un comment en BDD
+func LikesUpdate(id_post int, table string, ToUp bool) {
+	queryLikeBDD := "SELECT likes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
+	result, err := db.Query(queryLikeBDD)
+	checkErr(err)
+	var nblikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nblikes)
+		checkErr(err)
+	}
+	if ToUp {
+		nblikes++
+	} else {
+		nblikes--
+	}
+	query := "UPDATE " + table + " SET likes = ? WHERE id = ?"
+	updatelikes, err := db.Prepare(query)
+	checkErr(err)
+	_, err = updatelikes.Exec(nblikes, id_post)
+	checkErr(err)
+}
+
+// DislikesUpdate permet d'augmenter ou de diminuer le nombre de dislikes sur un post ou un comment en BDD
+func DislikesUpdate(id_post int, table string, ToUp bool) {
+	queryDislikeBDD := "SELECT dislikes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
+	result, err := db.Query(queryDislikeBDD)
+	checkErr(err)
+	var nbdislikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nbdislikes)
+		checkErr(err)
+	}
+	if ToUp {
+		nbdislikes++
+	} else {
+		nbdislikes--
+	}
+	query := "UPDATE " + table + " SET dislikes = ? WHERE id = ?"
+	updatedislikes, err := db.Prepare(query)
+	checkErr(err)
+	_, err = updatedislikes.Exec(nbdislikes, id_post)
+	checkErr(err)
+}
+
+// Like permet de voir s'il existe une ligne en BDD possédant l'id du post et de l'utilisateur entrées en paramètres
+// Si c'est le cas, on va la supprimer, si ce n'est pas le cas, alors on va la créer
+func Like(id_post int, id_user int, table string) {
+	liketype := "Like"
+	var err error
+	verif := tableSelect(table, liketype)
+	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
+	if err == sql.ErrNoRows {
+		insert := tableInsert(table, liketype)
+		stmt, err := db.Prepare(insert)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		LikesUpdate(id_post, table, true)
+	} else if err == nil {
+		delete := tableDelete(table, liketype)
+		stmt, err := db.Prepare(delete)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		LikesUpdate(id_post, table, false)
+	} else {
+		log.Fatal(err)
+	}
+}
+
+// Dislike permet, de la même manière, de vérifier si une ligne existe en BDD possédant l'id du post et de l'utilisateur entrées en paramètres
+func Dislike(id_post int, id_user int, table string) {
+	liketype := "Dislike"
+	var err error
+	verif := tableSelect(table, liketype)
+	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
+	if err == sql.ErrNoRows {
+		insert := tableInsert(table, liketype)
+		stmt, err := db.Prepare(insert)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		DislikesUpdate(id_post, table, true)
+	} else if err == nil {
+		delete := tableDelete(table, liketype)
+		stmt, err := db.Prepare(delete)
+		checkErr(err)
+		_, err = stmt.Exec(id_post, id_user)
+		checkErr(err)
+		DislikesUpdate(id_post, table, false)
+	} else {
+		log.Fatal(err)
+	}
+}
+
+// tableSelect permet de renvoyer la phrase de requête de sélection en fonction de la table et du type de like que c'est (like ou dislike)
+func tableSelect(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return `SELECT id_post, id_user FROM LikesPosts WHERE id_post = ? AND id_user = ?`
+		} else {
+			return `SELECT id_post, id_user FROM DislikesPosts WHERE id_post = ? AND id_user = ?`
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return `SELECT id_post, id_user FROM LikesComments WHERE id_post = ? AND id_user = ?`
+		} else {
+			return `SELECT id_post, id_user FROM DislikesComments WHERE id_post = ? AND id_user = ?`
+		}
+	}
+	return ""
+}
+
+// tableInsert permet de renvoyer la phrase de requête d'insertion en fonction de la table et du type de like que c'est (like ou dislike)
+func tableInsert(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return "INSERT INTO LikesPosts (id_post, id_user) VALUES (?, ?)"
+		} else {
+			return "INSERT INTO DislikesPosts (id_post, id_user) VALUES (?, ?)"
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return "INSERT INTO LikesComments (id_post, id_user) VALUES (?, ?)"
+		} else {
+			return "INSERT INTO DislikesComments (id_post, id_user) VALUES (?, ?)"
+		}
+	}
+	return ""
+}
+
+// tableDelete permet de renvoyer la phrase de requête de suppression en fonction de la table et du type de like que c'est (like ou dislike)
+func tableDelete(table string, liketype string) string{
+	if table == "Posts" {
+		if liketype == "Like" {
+			return "DELETE FROM LikesPosts WHERE id_post = ? AND id_user = ?"
+		} else {
+			return "DELETE FROM DislikesPosts WHERE id_post = ? AND id_user = ?"
+		}
+	} else if table == "Comments" {
+		if liketype == "Like" {
+			return "DELETE FROM LikesComments WHERE id_post = ? AND id_user = ?"
+		} else {
+			return "DELETE FROM DislikesComments WHERE id_post = ? AND id_user = ?"
+		}
+	}
+	return ""
+}
+
+////////// CATEGORY /////////////
+
+// infosCat permet de renvoyer un table de structure de Category
+func infosCat() []Category {
+	var table []Category
+
+	query := "SELECT * FROM Category"
+	result, err := db.Query(query)
+	checkErr(err)
+	var id, name, description interface{}
+	defer result.Close()
+	Category := Category{}
+	for result.Next() {
+		err = result.Scan(&id, &name, &description)
+		checkErr(err)
+		Category.Id, err = strconv.Atoi(fmt.Sprintf("%v", id))
+		if name == nil {
+			Category.Name = ""
+		} else {
+			Category.Name = fmt.Sprintf("%v", name)
+		}
+		if description == nil {
+			Category.Description = ""
+		} else {
+			Category.Description = fmt.Sprintf("%v", description)
+		}
+		table = append(table, Category)
+	}
+	return table
+}
+
+////////// SESSION /////////////
+
+// getIdSession permet de récupérer l'Id de l'utilisateur via le cookie
+func getIdSession(uuid string) int {
+	queryid := "SELECT id_user FROM SessionControl WHERE uuid = \"" + uuid + "\""
+	result, err := db.Query(queryid)
+	checkErr(err)
+	var id_user interface{}
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&id_user)
+		checkErr(err)
+		if id_user == nil {
+			return 0
+		} else {
+			intId, err := strconv.Atoi(fmt.Sprintf("%v", id_user))
+			checkErr(err)
+			return intId
+		}
+	}
+	return 0
+}
+
+////////// POSTS /////////////
+
+// infosPost permet de récupérer une structure de Posts de l'Id correspond dans la BDD
 func infosPost(id int) Posts {
 	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, Nickname_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
@@ -322,6 +539,7 @@ func infosPost(id int) Posts {
 	return Post
 }
 
+// infosPosts permet de récupérer tous les Posts sous la forme d'un tableau de structure Posts
 func infosPosts() []Posts {
 	var table []Posts
 	query := "SELECT * FROM Posts"
@@ -392,181 +610,9 @@ func infosPosts() []Posts {
 	return table
 }
 
-///////// LIKES DISLIKES /////////
+////////// COMMENTS /////////////
 
-func LikesUpdate(id_post int, table string, ToUp bool) {
-	queryLikeBDD := "SELECT likes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
-	result, err := db.Query(queryLikeBDD)
-	checkErr(err)
-	var nblikes int
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&nblikes)
-		checkErr(err)
-	}
-	if ToUp {
-		nblikes++
-	} else {
-		nblikes--
-	}
-	query := "UPDATE " + table + " SET likes = ? WHERE id = ?"
-	updatelikes, err := db.Prepare(query)
-	checkErr(err)
-	_, err = updatelikes.Exec(nblikes, id_post)
-	checkErr(err)
-}
-
-func DislikesUpdate(id_post int, table string, ToUp bool) {
-	queryDislikeBDD := "SELECT dislikes FROM " + table + " WHERE id = \"" + strconv.Itoa(id_post) + "\""
-	result, err := db.Query(queryDislikeBDD)
-	checkErr(err)
-	var nbdislikes int
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&nbdislikes)
-		checkErr(err)
-	}
-	if ToUp {
-		nbdislikes++
-	} else {
-		nbdislikes--
-	}
-	query := "UPDATE " + table + " SET dislikes = ? WHERE id = ?"
-	updatedislikes, err := db.Prepare(query)
-	checkErr(err)
-	_, err = updatedislikes.Exec(nbdislikes, id_post)
-	checkErr(err)
-}
-
-func Like(id_post int, id_user int, table string) {
-	liketype := "Like"
-	var err error
-	verif := tableSelect(table, liketype)
-	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
-	if err == sql.ErrNoRows {
-		insert := tableInsert(table, liketype)
-		stmt, err := db.Prepare(insert)
-		checkErr(err)
-		_, err = stmt.Exec(id_post, id_user)
-		checkErr(err)
-		LikesUpdate(id_post, table, true)
-	} else if err == nil {
-		delete := tableDelete(table, liketype)
-		stmt, err := db.Prepare(delete)
-		checkErr(err)
-		_, err = stmt.Exec(id_post, id_user)
-		checkErr(err)
-		LikesUpdate(id_post, table, false)
-	} else {
-		log.Fatal(err)
-	}
-}
-
-func Dislike(id_post int, id_user int, table string) {
-	liketype := "Dislike"
-	var err error
-	verif := tableSelect(table, liketype)
-	err = db.QueryRow(verif, id_post, id_user).Scan(&id_post, &id_user)
-	if err == sql.ErrNoRows {
-		insert := tableInsert(table, liketype)
-		stmt, err := db.Prepare(insert)
-		checkErr(err)
-		_, err = stmt.Exec(id_post, id_user)
-		checkErr(err)
-		DislikesUpdate(id_post, table, true)
-	} else if err == nil {
-		delete := tableDelete(table, liketype)
-		stmt, err := db.Prepare(delete)
-		checkErr(err)
-		_, err = stmt.Exec(id_post, id_user)
-		checkErr(err)
-		DislikesUpdate(id_post, table, false)
-	} else {
-		log.Fatal(err)
-	}
-}
-
-func tableSelect(table string, liketype string) string {
-	if table == "Posts" {
-		if liketype == "Like" {
-			return `SELECT id_post, id_user FROM LikesPosts WHERE id_post = ? AND id_user = ?`
-		} else {
-			return `SELECT id_post, id_user FROM DislikesPosts WHERE id_post = ? AND id_user = ?`
-		}
-	} else if table == "Comments" {
-		if liketype == "Like" {
-			return `SELECT id_post, id_user FROM LikesComments WHERE id_post = ? AND id_user = ?`
-		} else {
-			return `SELECT id_post, id_user FROM DislikesComments WHERE id_post = ? AND id_user = ?`
-		}
-	}
-	return ""
-}
-
-func tableInsert(table string, liketype string) string {
-	if table == "Posts" {
-		if liketype == "Like" {
-			return "INSERT INTO LikesPosts (id_post, id_user) VALUES (?, ?)"
-		} else {
-			return "INSERT INTO DislikesPosts (id_post, id_user) VALUES (?, ?)"
-		}
-	} else if table == "Comments" {
-		if liketype == "Like" {
-			return "INSERT INTO LikesComments (id_post, id_user) VALUES (?, ?)"
-		} else {
-			return "INSERT INTO DislikesComments (id_post, id_user) VALUES (?, ?)"
-		}
-	}
-	return ""
-}
-
-func tableDelete(table string, liketype string) string {
-	if table == "Posts" {
-		if liketype == "Like" {
-			return "DELETE FROM LikesPosts WHERE id_post = ? AND id_user = ?"
-		} else {
-			return "DELETE FROM DislikesPosts WHERE id_post = ? AND id_user = ?"
-		}
-	} else if table == "Comments" {
-		if liketype == "Like" {
-			return "DELETE FROM LikesComments WHERE id_post = ? AND id_user = ?"
-		} else {
-			return "DELETE FROM DislikesComments WHERE id_post = ? AND id_user = ?"
-		}
-	}
-	return ""
-}
-
-////////// CATEGORY /////////////
-
-func infosCat() []Category {
-	var table []Category
-
-	query := "SELECT * FROM Category"
-	result, err := db.Query(query)
-	checkErr(err)
-	var id, name, description interface{}
-	defer result.Close()
-	Category := Category{}
-	for result.Next() {
-		err = result.Scan(&id, &name, &description)
-		checkErr(err)
-		Category.Id, err = strconv.Atoi(fmt.Sprintf("%v", id))
-		if name == nil {
-			Category.Name = ""
-		} else {
-			Category.Name = fmt.Sprintf("%v", name)
-		}
-		if description == nil {
-			Category.Description = ""
-		} else {
-			Category.Description = fmt.Sprintf("%v", description)
-		}
-		table = append(table, Category)
-	}
-	return table
-}
-
+// infosComments permet de récupérer tous les Comments sous la forme d'un tableau de structure Comments
 func infosComments() []Comments {
 	var table []Comments
 	query := "SELECT * FROM Comments"
@@ -631,6 +677,7 @@ func infosComments() []Comments {
 	return table
 }
 
+// countComments permet de récupérer le nombre de Comments liés à un Posts
 func countComments(id_post int) int {
 	queryComments := "SELECT id FROM Comments WHERE id_posts = \"" + strconv.Itoa(id_post) + "\""
 	result, err := db.Query(queryComments)
@@ -644,24 +691,4 @@ func countComments(id_post int) int {
 		count++
 	}
 	return count
-}
-
-func getIdSession(uuid string) int {
-	queryid := "SELECT id_user FROM SessionControl WHERE uuid = \"" + uuid + "\""
-	result, err := db.Query(queryid)
-	checkErr(err)
-	var id_user interface{}
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&id_user)
-		checkErr(err)
-		if id_user == nil {
-			return 0
-		} else {
-			intId, err := strconv.Atoi(fmt.Sprintf("%v", id_user))
-			checkErr(err)
-			return intId
-		}
-	}
-	return 0
 }
