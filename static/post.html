@@ -31,7 +31,14 @@
         }
 
         function getURL() {
-            alert("Lien du post : " + window.location.href)
+            var link = window.location.href;
+            var text = document.getElementById("copylink");
+            text.value = link;
+            text.hidden = false;
+            text.select();
+            document.execCommand("copy");
+            text.hidden = true;
+            alert("URL Copié");
         }
 
     </script>
@@ -187,6 +194,8 @@
                 {{ end }}
 
                 <button onclick="getURL()">Partager</button>
+
+                <input hidden id="copylink">
 
                 {{ if ( gt .User.Id 0 ) }}
 
