@@ -39,6 +39,7 @@ var tpl *template.Template
 var cookie *http.Cookie
 
 var idpost int
+var idpostlike int
 
 func init() {
 	tpl = template.Must(template.ParseGlob("tmpl/*.html"))
@@ -311,6 +312,7 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	idpost := r.Form.Get("id")
 	idpostint, err := strconv.Atoi(idpost)
+	idpostlike = idpostint
 
 	if r.URL.Path != "/post" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
@@ -591,9 +593,12 @@ func likehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
 
+	url := "/post?id=" + strconv.Itoa(idpostlike)
+
 	if r.Method == "POST" {
-		Like(1, id, "Posts")
-		http.Redirect(w, r, "/post?id=id_post", 302) // Ici pour la redirection, c'est en gros la page du post
+		fmt.Println(idpostlike)
+		Like(idpostlike, id, "Posts")
+		http.Redirect(w, r, url, 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }
 
@@ -601,8 +606,11 @@ func dislikehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
 
+	url := "/post?id=" + strconv.Itoa(idpostlike)
+
 	if r.Method == "POST" {
-		Dislike(1, id, "Posts")
-		http.Redirect(w, r, "/post?id=id_post", 302) // Ici pour la redirection, c'est en gros la page du post
+		fmt.Println(idpostlike)
+		Dislike(idpostlike, id, "Posts")
+		http.Redirect(w, r, url, 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }

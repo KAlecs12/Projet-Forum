@@ -1,133 +1,11 @@
 package main
 
 import (
-	"database/sql"
-	"errors"
-	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
 	"time"
 )
 
-// La fonction insert prend une table et une interface de données pour insérer ces données dans la BDD
-func insert(table Table, value interface{}) error {
-	// call example: insert(USERS, Users{0, "Alecs", "alecs@ynov.com", "Admin", "I am a Pokemon fanboy", "shorturl.at/qtxIN", ""})
-	var stmt *sql.Stmt
-	var res sql.Result
-	var err error
-	// insert
-	switch table {
-	case USERS:
-		if fmt.Sprintf("%T", value) != "main.Users" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(nickname, email, role, biography, profileImage, status) values(?,?,?,?,?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(Users).Nickname, value.(Users).Email, value.(Users).Role, value.(Users).Biography, value.(Users).ProfileImage, value.(Users).Status)
-		checkErr(err)
-	case CATEGORY:
-		if fmt.Sprintf("%T", value) != "main.Category" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(name, description) values(?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(Category).Name, value.(Category).Description)
-		checkErr(err)
-	case USERSCAT:
-		if fmt.Sprintf("%T", value) != "main.UsersCat" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(id_users, id_category) values(?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(UsersCat).id_users, value.(UsersCat).id_category)
-		checkErr(err)
-	case POSTS:
-		if fmt.Sprintf("%T", value) != "main.Posts" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(title, creationDate, modificationDate, deleteDate, likes, dislikes, nickname_users) values(?,?,?,?,?,?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(Posts).Title, value.(Posts).CreationDate, value.(Posts).ModificationDate, value.(Posts).DeleteDate, value.(Posts).Likes, value.(Posts).Dislikes, value.(Posts).Nickname_users)
-		checkErr(err)
-	case COMMENTS:
-		if fmt.Sprintf("%T", value) != "main.Comments" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(content, creationDate, modificationDate, deleteDate, likes, dislikes, id_users, id_posts) values(?,?,?,?,?,?,?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(Comments).Content, value.(Comments).CreationDate, value.(Comments).ModificationDate, value.(Comments).DeleteDate, value.(Comments).Likes, value.(Comments).Dislikes, value.(Comments).NicknameUsers, value.(Comments).IdPosts)
-		checkErr(err)
-	case BADGE:
-		if fmt.Sprintf("%T", value) != "main.Badge" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(name, image, description) values(?,?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(Badge).name, value.(Badge).image, value.(Badge).description)
-		checkErr(err)
-	case USERSBADGE:
-		if fmt.Sprintf("%T", value) != "main.UsersBadge" {
-			return errors.New("wrong table type")
-		}
-		stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "INSERT INTO ", table, "(id_users, id_badge) values(?,?)"))
-		checkErr(err)
-
-		res, err = stmt.Exec(value.(UsersBadge).id_users, value.(UsersBadge).id_badge)
-		checkErr(err)
-	}
-
-	id, err := res.LastInsertId()
-	checkErr(err)
-
-	fmt.Println("Value inserted into table=", table, " at id=", id)
-	return nil
-}
-
-// Encore à modifier, mais pour l'instant permet de changer un username en un autre, en prenant une table spécifique
-func update(table Table, value interface{}, id int) {
-	var stmt *sql.Stmt
-	var res sql.Result
-	var err error
-
-	// update
-	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "UPDATE ", table, " SET nickname=? WHERE id=?"))
-	checkErr(err)
-
-	res, err = stmt.Exec("astaxieupdate", id)
-	checkErr(err)
-
-	affect, err := res.RowsAffected()
-	checkErr(err)
-
-	fmt.Println(affect)
-}
-
-// La fonction delete prend une table et un id en paramètre pour retirer les informations correspondantes.
-func delete(table Table, id int) {
-	var stmt *sql.Stmt
-	var res sql.Result
-	var affect int64
-	var err error
-
-	stmt, err = db.Prepare(fmt.Sprintf("%s %s %s", "DELETE FROM ", table, " WHERE id=?"))
-	checkErr(err)
-
-	res, err = stmt.Exec(id)
-	checkErr(err)
-
-	affect, err = res.RowsAffected()
-	checkErr(err)
-
-	fmt.Println(affect)
-
-	db.Close()
-}
 
 // La fonction CreateTables permet de réinitialiser les tables en les supprimant et en les recréant, seules les tables précisées dans le code sont touchées
 func CreateTables() string {
@@ -145,20 +23,7 @@ func CreateTables() string {
 	return tableList
 }
 
-func registerBDD(nickname string, email string, hashedpwd string, question string) {
-	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd, squestion, role, status) VALUES (?, ?, ?, ?, ?, ?)")
-	checkErr(err)
-	_, err = stmt.Exec(nickname, email, hashedpwd, question, "User", "Actif")
-	checkErr(err)
-}
-
-func ChangepwdBDD(hashedpwd string, email string) {
-	stmt, err := db.Prepare("UPDATE Users SET hashedpwd = ? WHERE email = ?")
-	checkErr(err)
-	_, err = stmt.Exec(hashedpwd, email)
-	checkErr(err)
-}
-
+// CreateSession permet de créer une session à partir de l'id de l'utilisateur connecté et de son uuid présent dans son cookie
 func CreateSession(id_user int, uuid string) {
 	stmt, err := db.Prepare("INSERT INTO SessionControl (uuid, id_user) VALUES (?, ?)")
 	checkErr(err)
@@ -168,6 +33,7 @@ func CreateSession(id_user int, uuid string) {
 
 //////////////////////// CATEGORY ////////////////////////
 
+// CreateCat permet de créer une Category
 func CreateCat(name string) {
 	if name != "" {
 		stmt, err := db.Prepare("INSERT INTO Category (name) VALUES (?)")
@@ -177,6 +43,7 @@ func CreateCat(name string) {
 	}
 }
 
+// ModifiedCat permet de modifier le nom d'une Category
 func ModifiedCat(name string, newname string) {
 	stmt, err := db.Prepare("UPDATE Category SET name = ? WHERE name = ?")
 	checkErr(err)
@@ -184,6 +51,7 @@ func ModifiedCat(name string, newname string) {
 	checkErr(err)
 }
 
+// DeleteCat permet de supprimer une Category
 func DeleteCat(name string) {
 	stmt, err := db.Prepare("DELETE FROM Category WHERE name = ?")
 	checkErr(err)
@@ -193,14 +61,16 @@ func DeleteCat(name string) {
 
 //////////////////////// POSTS ////////////////////////
 
+// CreatePost permet de créer un Posts à partir des informations de bases
 func CreatePost(nickname_users string, title string, content string, category string) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, category, status) VALUES (?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, category, status, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(title, content, creationDate, nickname_users, category, "Actif")
+	_, err = stmt.Exec(title, content, creationDate, nickname_users, category, "Actif", 0, 0)
 	checkErr(err)
 }
 
+// ModifiedPost permet de modifier le contenu d'un Posts
 func ModifiedPost(id_post int, content string) {
 	modificationDate := time.Now()
 	stmt, err := db.Prepare("UPDATE Posts SET content = ?, modificationDate = ? WHERE id = ?")
@@ -209,6 +79,7 @@ func ModifiedPost(id_post int, content string) {
 	checkErr(err)
 }
 
+// DeletePost permet de supprimer un Posts de l'affichage, mais pas de la base de données
 func DeletePost(id_post int) {
 	stmt, err := db.Prepare("UPDATE Posts SET Status = ? WHERE id = ?")
 	checkErr(err)
@@ -216,6 +87,7 @@ func DeletePost(id_post int) {
 	checkErr(err)
 }
 
+// CreateComment permet de créer un Comments à partir des informations entrées en paramètre
 func CreateComment(nickname_users string, content string, post int) {
 	creationDate := time.Now()
 	stmt, err := db.Prepare("INSERT INTO Comments (content, creationDate, id_users, id_posts ) VALUES (?, ?, ?, ?)")
@@ -226,6 +98,7 @@ func CreateComment(nickname_users string, content string, post int) {
 
 ////////////////////////  ACCOUNT  ////////////////////////
 
+// Modifypseudo permet de changer le nickname d'un utilisateur dans la BDD
 func Modifypseudo(newpseudo string, pseudo string) {
 	stmt, err := db.Prepare("UPDATE Users SET nickname = ? WHERE nickname = ?")
 	checkErr(err)
@@ -233,9 +106,26 @@ func Modifypseudo(newpseudo string, pseudo string) {
 	checkErr(err)
 }
 
+// Modifyemail permet de changer l'email d'un utilisateur dans la BDD
 func Modifyemail(newemail string, email string) {
 	stmt, err := db.Prepare("UPDATE Users SET email = ? WHERE email = ?")
 	checkErr(err)
 	_, err = stmt.Exec(newemail, email)
+	checkErr(err)
+}
+
+// registerBDD permet de créer un utilisateur en BDD à partir des informations récupérées sur la page
+func registerBDD(nickname string, email string, hashedpwd string, question string) {
+	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd, squestion, role, status) VALUES (?, ?, ?, ?, ?, ?)")
+	checkErr(err)
+	_, err = stmt.Exec(nickname, email, hashedpwd, question, "User", "Actif")
+	checkErr(err)
+}
+
+// ChangepwdBDD prend un mot de passe haché et un email pour changer le mot de passe d'un utilisateur
+func ChangepwdBDD(hashedpwd string, email string) {
+	stmt, err := db.Prepare("UPDATE Users SET hashedpwd = ? WHERE email = ?")
+	checkErr(err)
+	_, err = stmt.Exec(hashedpwd, email)
 	checkErr(err)
 }
