@@ -122,6 +122,9 @@ func homehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
 
+	user := infosU(id)
+	log.Println(user.Nickname)
+
 	Post := Homecontent{Users: infosU(id), Infos: infosPosts(), Category: infosCat()}
 
 	err = t.Execute(w, Post)

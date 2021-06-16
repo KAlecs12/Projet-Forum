@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Astulpho - Poste</title>
+    <title>Astulpho - {{.Posts.Title}}</title>
     <link href="/CSS/style.css" rel="stylesheet"/>
     <link href="/CSS/tailwind.css" rel="stylesheet"/>
 
@@ -68,22 +68,17 @@
         <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
         <a class="item" href="/">Forum</a>
 
+
         <li class="item">&nbsp; → &nbsp; </li>
         <li>
 
-            <a class="item" href="/login">Catégorie</a>
+            <a class="item">{{.Posts.Category}}</a>
         </li>
 
         <li class="item">&nbsp; → &nbsp; </li>
         <li>
 
-            <a class="item" href="/login">{{.Posts.Category}}</a>
-        </li>
-
-        <li class="item">&nbsp; → &nbsp; </li>
-        <li>
-
-            <a class="item" href="/login">{{.Posts.Title}}</a>
+            <a class="item">{{.Posts.Title}}</a>
         </li>
 
     </ol>
@@ -133,7 +128,8 @@
 
                         <div class=" flex flex-col postcontent pl-6 pr-6">
 
-                            <div class="text-white">{{.Posts.Nickname_users}}</div>
+                                <div class="text-red-700">{{.Posts.Nickname_users}}</div>
+
                             <div class="auteur">Auteur du sujet </div>
                         </div>
 
@@ -145,6 +141,8 @@
 
                 </div>
 
+                {{ if ( gt .User.Id 0 ) }}
+
                 <div class="flex flex-row">
                     <form method="POST" class="flex justify-center" action="/like">
                         <button nametype="submit" class=" relative ml-10 h-6 w-16 mr-4 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Like</button>
@@ -154,6 +152,8 @@
                         <button nametype="submit" class=" relative h-6 w-16 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dislike</button>
                     </form>
                 </div>
+
+                {{ end }}
 
                 {{ $Posts := .Posts }}
                 {{ $Comment := .Comment }}
