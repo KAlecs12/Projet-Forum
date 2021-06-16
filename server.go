@@ -29,6 +29,11 @@ type allPost struct {
 	Comment []Comments
 }
 
+type ModifCat struct {
+	Users    Users
+	Category []Category
+}
+
 var db *sql.DB
 var tpl *template.Template
 var cookie *http.Cookie
@@ -47,6 +52,7 @@ func main() {
 	http.HandleFunc("/", homehandler)
 	http.HandleFunc("/signin", signinhandler)
 	http.HandleFunc("/login", loginhandler)
+	http.HandleFunc("/motdepasse-oublie", secretqhandler)
 	http.HandleFunc("/account", accounthandler)
 	http.HandleFunc("/post", posthandler)
 	http.HandleFunc("/postcreation", postcreation)
@@ -55,7 +61,6 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/like", likehandler)
 	http.HandleFunc("/dislike", dislikehandler)
-
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -186,6 +191,37 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func secretqhandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path != "/motdepasse-oublie" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+	if r.Method == "POST" {
+		Verifquestion(w, r)
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// sur la page d'accueil, on récupère le template index.html
+	t, err := template.ParseFiles("./static/recupmdp.html", "./tmpl/footer.html")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+	content := ""
+	err = t.Execute(w, content)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+}
+
 func accounthandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/account" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
@@ -226,11 +262,6 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-}
-
-type ModifCat struct {
-	Users    Users
-	Category []Category
 }
 
 func modifcat(w http.ResponseWriter, r *http.Request) {
@@ -365,6 +396,7 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 	nickname := r.FormValue("pseudo")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+	question := r.FormValue("qsecrete")
 
 	hashedpwd, err := HashPassword(password)
 	if err != nil {
@@ -374,13 +406,14 @@ func registerhandler(w http.ResponseWriter, r *http.Request) {
 
 	check := queryLogin(nickname, email)
 	if check {
-		log.Println("oui")
+		log.Println("Email ou nom deja pris")
+		http.Redirect(w, r, "/signin", 302)
 		//w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		//t, err := template.ParseFiles("./static/signin.html")
 		//UnableLoad(w, err)
 
 	} else {
-		registerBDD(nickname, email, hashedpwd)
+		registerBDD(nickname, email, hashedpwd, question)
 
 		http.Redirect(w, r, "/login", 302)
 	}
@@ -411,6 +444,56 @@ func LoginToBDD(w http.ResponseWriter, r *http.Request) {
 		// Sera notre UUID, et donc que l'utilisateur aura toujours dans son cookie une des variables de recherche
 	} else {
 		log.Println("Le mdp est incorrect")
+		http.Redirect(w, r, "/login", 302)
+
+	}
+}
+
+func Verifquestion(w http.ResponseWriter, r *http.Request) {
+
+	email := r.FormValue("email")
+	response := r.FormValue("qsecrete")
+
+	user := infosU2(email)
+
+	check := queryEmail(email)
+	if check {
+
+		if response == user.Squestion {
+			if r.FormValue("qsecrete") != "" && r.FormValue("pwd") != "" {
+
+				hashedpwd, err := HashPassword(r.FormValue("pwd"))
+				if err != nil {
+					fmt.Fprint(w, "Unable to hash password.")
+					log.Fatal(err)
+				}
+				ChangepwdBDD(hashedpwd, email)
+				http.Redirect(w, r, "/login", 302)
+
+			}
+
+		} else {
+
+			log.Println("La reponse est incorrecte")
+			http.Redirect(w, r, "/motdepasse-oublie", 302)
+		}
+
+	} else {
+
+		log.Println("Email existe pas ")
+		http.Redirect(w, r, "/motdepasse-oublie", 302)
+
+	}
+
+}
+
+func getUserSession(w http.ResponseWriter, r *http.Request) int {
+	cookie, err := r.Cookie("id")
+	if err != nil || cookie == nil {
+		return 0
+	} else {
+		uuid := cookie.Value
+		return getIdSession(uuid)
 	}
 }
 
@@ -423,6 +506,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 	http.Redirect(w, r, "/", 302)
 }
+
+////////////// REQUETES POST /////////////////
 
 func postToBDD(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
@@ -502,16 +587,6 @@ func commentToBDD(w http.ResponseWriter, r *http.Request, idpost int) {
 	http.Redirect(w, r, "/", 302)
 }
 
-func getUserSession(w http.ResponseWriter, r *http.Request) int {
-	cookie, err := r.Cookie("id")
-	if err != nil || cookie == nil {
-		return 0
-	} else {
-		uuid := cookie.Value
-		return getIdSession(uuid)
-	}
-}
-
 func likehandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
@@ -528,6 +603,6 @@ func dislikehandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		Dislike(1, id, "Posts")
-		http.Redirect(w, r, "/post?id=1", 302) // Ici pour la redirection, c'est en gros la page du post
+		http.Redirect(w, r, "/post?id=id_post", 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }

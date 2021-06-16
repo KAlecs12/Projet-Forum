@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Astulpho - Récuperation mot de passe</title>
+    <link href="/CSS/style.css" rel="stylesheet"/>
+    <link href="/CSS/tailwind.css" rel="stylesheet"/>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+<a name="haut"></a>
+<div id="main">
+
+
+
+    <!--    HEADER       -->
+
+    <div class="section">
+
+            <a href="/" class="title">
+                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+            </a>
+        </div>
+
+    </div>
+    <!--    BODY     -->
+
+    <ol class="breadcrumb">
+
+        <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+        <a class="item" href="/">Forum</a>
+
+        <li class="item">&nbsp; → &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">Récuperation mot de passe</a>
+        </li>
+
+    </ol>
+
+    <div class="body">
+        <!--    PARTIE GAUCHE    -->
+        <div class="gauche rounded-md">
+
+
+                <form class="creation" method="POST">
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="email">Merci de répondre a ce formulaire, veuillez tout d'abord entrer l'e-mail relié a votre compte</label>
+                        </div>
+
+                        <div class="col-75">
+                            <input class="menuscroll" type="email" id="email" name="email"  placeholder="Indiquez votre adresse mail" required>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="qsecrete">Quel est votre acteur, musicien ou artiste favori ?</label>
+                        </div>
+
+                        <div class="col-75">
+                            <input class="menuscroll" type="text" id="qsecrete" name="qsecrete" minlength="3" placeholder="Indiquez votre réponse personelle" required>
+                        </div>
+
+                    </div>
+
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="subject">Entrer votre nouveau mot de passe</label>
+                            </div>
+
+                            <div class="col-75">
+                                <input class="menuscroll" type="password" id="subject" name="pwd" minlength="6" placeholder="Indiquez votre nouveau mot de passe" required>
+                                <label for="subject" class="text-gray-800">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
+                            </div>
+
+                        </div>
+
+
+                    <div class="flex justify-center">
+                        <button type="submit" class=" relative mt-5 w-52 br-lblue flex justify-center py-2 px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Soumettre ma réponse</button>
+                    </div>
+
+                    <br>
+                    <br>
+
+                </form>
+
+
+        </div>
+    </div>
+
+    {{template "footer"}}
+
+</body>
+</html>
+

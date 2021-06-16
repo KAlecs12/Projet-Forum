@@ -145,10 +145,17 @@ func CreateTables() string {
 	return tableList
 }
 
-func registerBDD(nickname string, email string, hashedpwd string) {
-	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd, role) VALUES (?, ?, ?, ?)")
+func registerBDD(nickname string, email string, hashedpwd string, question string) {
+	stmt, err := db.Prepare("INSERT INTO Users (nickname, email, hashedpwd, squestion, role, status) VALUES (?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(nickname, email, hashedpwd, "User")
+	_, err = stmt.Exec(nickname, email, hashedpwd, question, "User", "Actif")
+	checkErr(err)
+}
+
+func ChangepwdBDD(hashedpwd string, email string) {
+	stmt, err := db.Prepare("UPDATE Users SET hashedpwd = ? WHERE email = ?")
+	checkErr(err)
+	_, err = stmt.Exec(hashedpwd, email)
 	checkErr(err)
 }
 
@@ -158,6 +165,8 @@ func CreateSession(id_user int, uuid string) {
 	_, err = stmt.Exec(uuid, id_user)
 	checkErr(err)
 }
+
+//////////////////////// CATEGORY ////////////////////////
 
 func CreateCat(name string) {
 	if name != "" {
@@ -181,6 +190,8 @@ func DeleteCat(name string) {
 	_, err = stmt.Exec(name)
 	checkErr(err)
 }
+
+//////////////////////// POSTS ////////////////////////
 
 func CreatePost(nickname_users string, title string, content string, category string) {
 	creationDate := time.Now()
@@ -212,6 +223,8 @@ func CreateComment(nickname_users string, content string, post int) {
 	_, err = stmt.Exec(content, creationDate, nickname_users, post)
 	checkErr(err)
 }
+
+////////////////////////  ACCOUNT  ////////////////////////
 
 func Modifypseudo(newpseudo string, pseudo string) {
 	stmt, err := db.Prepare("UPDATE Users SET nickname = ? WHERE nickname = ?")

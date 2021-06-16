@@ -18,7 +18,6 @@ const (
 	CATEGORY   Table = "Category"
 	USERSCAT   Table = "UsersCat"
 	POSTS      Table = "Posts"
-	POSTSCAT   Table = "PostsCat"
 	COMMENTS   Table = "Comments"
 	BADGE      Table = "Badge"
 	USERSBADGE Table = "UsersBadge"
@@ -28,6 +27,7 @@ type Users struct {
 	Id           int
 	Nickname     string
 	Email        string
+	Squestion    string
 	Role         string
 	Biography    string
 	ProfileImage string
@@ -99,26 +99,25 @@ func queryId(email string) int {
 	return id
 }
 
-// La fonction queryUname va vérifier si le nom d'utilisateur appartient déjà à un utilisateur enregistré dans la base de données
-func queryUname(email string) string {
-	query := "SELECT nickname FROM Users WHERE email = \"" + email + "\""
-	result, err := db.Query(query)
-	checkErr(err)
-	var nickname string
-	defer result.Close()
-	for result.Next() {
-		err = result.Scan(&nickname)
-		checkErr(err)
-		return nickname
-	}
-	return nickname
-}
-
 // La fonction queryLogin va vérifier si le nom d'utilisateur et l'email appartient déjà à un utilisateur enregistré dans la base de données
 func queryLogin(username string, email string) bool {
 	var err error
 	verif := `SELECT nickname, email FROM Users WHERE nickname = ? OR email = ?`
 	err = db.QueryRow(verif, username, email).Scan(&username, &email)
+
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Print(err)
+		}
+		return false
+	}
+	return true
+}
+
+func queryEmail(email string) bool {
+	var err error
+	verif := `SELECT email FROM Users WHERE email = ?`
+	err = db.QueryRow(verif, email).Scan(&email)
 
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -155,14 +154,14 @@ func InitDB() {
 }
 
 func infosU(id int) Users {
-	query := "SELECT id, nickname, email, role, biography, profileImage, status FROM Users WHERE id = " + strconv.Itoa(id)
+	query := "SELECT id, nickname, email, squestion, role, biography, profileImage, status FROM Users WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var id_User, nicknameBDD, emailBDD, roleBDD, biographyBDD, profileImageBDD, statusBDD interface{}
+	var id_User, nicknameBDD, emailBDD, roleBDD, squestion, biographyBDD, profileImageBDD, statusBDD interface{}
 	defer result.Close()
 	User := Users{}
 	for result.Next() {
-		err = result.Scan(&id_User, &nicknameBDD, &emailBDD, &roleBDD, &biographyBDD, &profileImageBDD, &statusBDD)
+		err = result.Scan(&id_User, &nicknameBDD, &emailBDD, &squestion, &roleBDD, &biographyBDD, &profileImageBDD, &statusBDD)
 		checkErr(err)
 
 		User.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_User))
@@ -175,6 +174,62 @@ func infosU(id int) Users {
 			User.Email = ""
 		} else {
 			User.Email = fmt.Sprintf("%v", emailBDD)
+		}
+		if squestion == nil {
+			User.Squestion = ""
+		} else {
+			User.Squestion = fmt.Sprintf("%v", squestion)
+		}
+		if roleBDD == nil {
+			User.Role = ""
+		} else {
+			User.Role = fmt.Sprintf("%v", roleBDD)
+		}
+		if biographyBDD == nil {
+			User.Biography = ""
+		} else {
+			User.Biography = fmt.Sprintf("%v", biographyBDD)
+		}
+		if profileImageBDD == nil {
+			User.ProfileImage = ""
+		} else {
+			User.ProfileImage = fmt.Sprintf("%v", profileImageBDD)
+		}
+		if statusBDD == nil {
+			User.Status = ""
+		} else {
+			User.Status = fmt.Sprintf("%v", statusBDD)
+		}
+	}
+	return User
+}
+
+func infosU2(email string) Users {
+	query := "SELECT id, nickname, email, squestion, role, biography, profileImage, status FROM Users WHERE email = \"" + email + "\""
+	result, err := db.Query(query)
+	checkErr(err)
+	var id_User, nicknameBDD, emailBDD, roleBDD, squestion, biographyBDD, profileImageBDD, statusBDD interface{}
+	defer result.Close()
+	User := Users{}
+	for result.Next() {
+		err = result.Scan(&id_User, &nicknameBDD, &emailBDD, &squestion, &roleBDD, &biographyBDD, &profileImageBDD, &statusBDD)
+		checkErr(err)
+
+		User.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_User))
+		if nicknameBDD == nil {
+			User.Nickname = ""
+		} else {
+			User.Nickname = fmt.Sprintf("%v", nicknameBDD)
+		}
+		if emailBDD == nil {
+			User.Email = ""
+		} else {
+			User.Email = fmt.Sprintf("%v", emailBDD)
+		}
+		if squestion == nil {
+			User.Squestion = ""
+		} else {
+			User.Squestion = fmt.Sprintf("%v", squestion)
 		}
 		if roleBDD == nil {
 			User.Role = ""
@@ -431,7 +486,7 @@ func Dislike(id_post int, id_user int, table string) {
 	}
 }
 
-func tableSelect(table string, liketype string) string{
+func tableSelect(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return `SELECT id_post, id_user FROM LikesPosts WHERE id_post = ? AND id_user = ?`
@@ -448,7 +503,7 @@ func tableSelect(table string, liketype string) string{
 	return ""
 }
 
-func tableInsert(table string, liketype string) string{
+func tableInsert(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return "INSERT INTO LikesPosts (id_post, id_user) VALUES (?, ?)"
@@ -465,7 +520,7 @@ func tableInsert(table string, liketype string) string{
 	return ""
 }
 
-func tableDelete(table string, liketype string) string{
+func tableDelete(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return "DELETE FROM LikesPosts WHERE id_post = ? AND id_user = ?"

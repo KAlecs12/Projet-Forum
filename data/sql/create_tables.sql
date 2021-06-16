@@ -4,6 +4,7 @@ CREATE TABLE Users (
 	nickname TEXT NOT NULL,
 	email TEXT NOT NULL,
     hashedpwd TEXT NOT NULL,
+    squestion TEXT NOT NULL,
 	role TEXT,
 	biography TEXT,
 	profileImage TEXT,

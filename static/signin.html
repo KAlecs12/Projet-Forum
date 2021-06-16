@@ -5,7 +5,6 @@
     <title>Astulpho - Forum</title>
     <link href="/CSS/style.css" rel="stylesheet"/>
     <link href="/CSS/tailwind.css" rel="stylesheet"/>
-    <script src="https://cdn.tiny.cloud/1/nb5qk8y8y9zqnqlmgm8kzwl8280vhjstk2w65ysciq73mahy/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 </head>
@@ -14,40 +13,14 @@
 <div id="main">
 
     <div class="section">
-
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="/post">Random Post</a>
-        </div>
-
         <!-- Use any element to open the sidenav -->
         <div class="start">
-            <div class="bigburger" onclick="openNav()">
-                <div class="burger"></div>
-                <div class="burger"></div>
-                <div class="burger"></div>
-            </div>
 
             <a href="/" class="title">
                 <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
             </a>
 
         </div>
-
-        <script>
-            /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-                document.getElementById("main").style.marginLeft = "250px";
-            }
-
-            /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-                document.getElementById("main").style.marginLeft = "0";
-            }
-        </script>
-
 
 </div>
 
@@ -104,6 +77,13 @@
                         <label for="password" class="text-yellow-400 float-left mb-0.5">*Mot de passe</label>
                         <input id="password" name="password" type="password" minlength="6"  autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Mot de passe">
                         <label for="password" class="text-gray-800">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
+                    </div>
+
+                    <div>
+                        <br>
+                        <label for="question" class="text-yellow-400 float-left mb-0.5">*Question secrete : Quel est votre acteur, musicien ou artiste favori ?</label>
+                        <input id="question" name="qsecrete" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Votre réponse">
+                        <label for="question" class="text-gray-800">Note: Pensez que vous utiliserez cette reponse pour récuperer votre potentiel mot de passe perdu (Ne l'oubliez pas !).</label>
                     </div>
 
                 </div>
