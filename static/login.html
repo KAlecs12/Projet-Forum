@@ -16,39 +16,13 @@
 
     <div class="section">
 
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="/post">Random Post</a>
-        </div>
+        <a href="/" class="title">
+            <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+        </a>
 
-    <!-- Use any element to open the sidenav -->
+    </div>
 
-        <div class="start">
-            <div class="bigburger" onclick="openNav()">
-                <div class="burger"></div>
-                <div class="burger"></div>
-                <div class="burger"></div>
-            </div>
 
-            <a href="/" class="title">
-                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
-            </a>
-
-        </div>
-
-        <script>
-        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-                document.getElementById("main").style.marginLeft = "250px";
-            }
-
-        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-                document.getElementById("main").style.marginLeft = "0";
-            }
-        </script>
 
 
     </div>
@@ -109,15 +83,9 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label for="remember_me" class=" phone2 ml-2 block text-gray-900">
-                                Se souvenir
-                            </label>
-                        </div>
+                    <div class="flex items-center justify-between float-right">
 
-                        <div class="text-sm">
+                        <div class="text-sm mb-3">
                             <a href="/motdepasse-oublie" class="phone2 font-medium text-black hover:text-white">
 
                                 Mot de passe oublié?

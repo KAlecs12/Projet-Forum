@@ -91,19 +91,26 @@
 
             {{end}}
 
+
             {{if (gt .Users.Id 0 )}}
 
                 {{template "header2"}}
-
             {{end}}
+
         </div>
 
 
 
-
-        <a href="/" class="title">
-            <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
-        </a>
+        <div class="flex flex-row">
+            {{if (eq .Users.Role "Admin") }}
+                    <div class="text-sm body-content"> Vous êtes actuellement connecté en tant <br>qu'Administrateur sous le nom de :&nbsp;<a class="text-red-500">{{.Users.Nickname}}</a> </div>
+            {{else if (eq .Users.Role "User") }}
+                <div class="text-sm body-content"> Vous êtes actuellement connecté sous le pseudo :&nbsp;<a class="text-blue-500">{{.Users.Nickname}}</a> </div>
+            {{ end }}
+            <a class="flex place-items-center mr-2" href="/" class="title">
+                <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
+            </a>
+        </div>
     </div>
         <!--    BODY     -->
 
