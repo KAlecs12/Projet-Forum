@@ -57,9 +57,12 @@ type Posts struct {
 	Likes            int
 	Dislikes         int
 	Nickname_users   string
+	Bio_users        string
 	Category         string
 	Status           string
 	CommentCount     int
+	Like             int
+	Dislike          int
 }
 
 type Comments struct {
@@ -71,6 +74,7 @@ type Comments struct {
 	Likes            int
 	Dislikes         int
 	NicknameUsers    string
+	BioUsers         string
 	IdPosts          int
 }
 
@@ -362,7 +366,7 @@ func Dislike(id_post int, id_user int, table string) {
 }
 
 // tableSelect permet de renvoyer la phrase de requête de sélection en fonction de la table et du type de like que c'est (like ou dislike)
-func tableSelect(table string, liketype string) string{
+func tableSelect(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return `SELECT id_post, id_user FROM LikesPosts WHERE id_post = ? AND id_user = ?`
@@ -380,7 +384,7 @@ func tableSelect(table string, liketype string) string{
 }
 
 // tableInsert permet de renvoyer la phrase de requête d'insertion en fonction de la table et du type de like que c'est (like ou dislike)
-func tableInsert(table string, liketype string) string{
+func tableInsert(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return "INSERT INTO LikesPosts (id_post, id_user) VALUES (?, ?)"
@@ -398,7 +402,7 @@ func tableInsert(table string, liketype string) string{
 }
 
 // tableDelete permet de renvoyer la phrase de requête de suppression en fonction de la table et du type de like que c'est (like ou dislike)
-func tableDelete(table string, liketype string) string{
+func tableDelete(table string, liketype string) string {
 	if table == "Posts" {
 		if liketype == "Like" {
 			return "DELETE FROM LikesPosts WHERE id_post = ? AND id_user = ?"
@@ -473,14 +477,14 @@ func getIdSession(uuid string) int {
 
 // infosPost permet de récupérer une structure de Posts de l'Id correspond dans la BDD
 func infosPost(id int) Posts {
-	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, Nickname_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
+	query := "SELECT id, title, content, creationDate, modificationDate, deleteDate, likes, dislikes, Nickname_users, bio_users, category, status FROM Posts WHERE id = " + strconv.Itoa(id)
 	result, err := db.Query(query)
 	checkErr(err)
-	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nicknameUsers, category, status interface{}
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nicknameUsers, biouser, category, status interface{}
 	defer result.Close()
 	Post := Posts{}
 	for result.Next() {
-		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &category, &status)
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &biouser, &category, &status)
 		checkErr(err)
 
 		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
@@ -513,22 +517,19 @@ func infosPost(id int) Posts {
 			t := deleteDate.(time.Time)
 			Post.DeleteDate = t.Format("02 January 2006 15:04")
 		}
-		if likes == nil {
-			Post.Likes = 0
-		} else {
-			Post.Likes, err = strconv.Atoi(fmt.Sprintf("%v", likes))
-			checkErr(err)
-		}
-		if dislikes == nil {
-			Post.Dislikes = 0
-		} else {
-			Post.Dislikes, err = strconv.Atoi(fmt.Sprintf("%v", dislikes))
-			checkErr(err)
-		}
+
+		Post.Like = likesCount(Post.Id)
+		Post.Dislike = dislikesCount(Post.Id)
+
 		if nicknameUsers == nil {
 			Post.Nickname_users = ""
 		} else {
 			Post.Nickname_users = fmt.Sprintf("%v", nicknameUsers)
+		}
+		if biouser == nil {
+			Post.Bio_users = ""
+		} else {
+			Post.Bio_users = fmt.Sprintf("%v", biouser)
 		}
 		if category == nil {
 			Post.Category = ""
@@ -545,11 +546,11 @@ func infosPosts() []Posts {
 	query := "SELECT * FROM Posts"
 	result, err := db.Query(query)
 	checkErr(err)
-	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nicknameUsers, category, status interface{}
+	var id_Post, title, creationDate, modificationDate, deleteDate, content, likes, dislikes, nicknameUsers, biouser, category, status interface{}
 	defer result.Close()
 	Post := Posts{}
 	for result.Next() {
-		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &category, &status)
+		err = result.Scan(&id_Post, &title, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &biouser, &category, &status)
 		checkErr(err)
 
 		Post.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_Post))
@@ -599,12 +600,19 @@ func infosPosts() []Posts {
 		} else {
 			Post.Nickname_users = fmt.Sprintf("%v", nicknameUsers)
 		}
+		if biouser == nil {
+			Post.Bio_users = ""
+		} else {
+			Post.Bio_users = fmt.Sprintf("%v", biouser)
+		}
 		if category == nil {
 			Post.Category = ""
 		} else {
 			Post.Category = fmt.Sprintf("%v", category)
 		}
 		Post.CommentCount = countComments(Post.Id)
+		Post.Like = likesCount(Post.Id)
+		Post.Dislike = dislikesCount(Post.Id)
 		table = append(table, Post)
 	}
 	return table
@@ -618,11 +626,11 @@ func infosComments() []Comments {
 	query := "SELECT * FROM Comments"
 	result, err := db.Query(query)
 	checkErr(err)
-	var id_comments, content, creationDate, modificationDate, deleteDate, likes, dislikes, nicknameUsers, idPosts interface{}
+	var id_comments, content, creationDate, modificationDate, deleteDate, likes, dislikes, nicknameUsers, biousers, idPosts interface{}
 	defer result.Close()
 	Comments := Comments{}
 	for result.Next() {
-		err = result.Scan(&id_comments, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &idPosts)
+		err = result.Scan(&id_comments, &content, &creationDate, &modificationDate, &deleteDate, &likes, &dislikes, &nicknameUsers, &biousers, &idPosts)
 		checkErr(err)
 
 		Comments.Id, err = strconv.Atoi(fmt.Sprintf("%v", id_comments))
@@ -666,6 +674,11 @@ func infosComments() []Comments {
 		} else {
 			Comments.NicknameUsers = fmt.Sprintf("%v", nicknameUsers)
 		}
+		if biousers == nil {
+			Comments.BioUsers = ""
+		} else {
+			Comments.BioUsers = fmt.Sprintf("%v", biousers)
+		}
 		if idPosts == nil {
 			Comments.IdPosts = 0
 		} else {
@@ -691,4 +704,34 @@ func countComments(id_post int) int {
 		count++
 	}
 	return count
+}
+
+// likesCount permet de récupérer le nombre de likes d'un post
+func likesCount(idpost int) int {
+	query := "SELECT likes FROM Posts WHERE id = " + strconv.Itoa(idpost)
+	result, err := db.Query(query)
+	checkErr(err)
+	var nblikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nblikes)
+		checkErr(err)
+		return nblikes
+	}
+	return nblikes
+}
+
+// dislikesCount permet de récupérer le nombre de dislikes d'un post
+func dislikesCount(idpost int) int {
+	query := "SELECT dislikes FROM Posts WHERE id = " + strconv.Itoa(idpost)
+	result, err := db.Query(query)
+	checkErr(err)
+	var nbdislikes int
+	defer result.Close()
+	for result.Next() {
+		err = result.Scan(&nbdislikes)
+		checkErr(err)
+		return nbdislikes
+	}
+	return nbdislikes
 }

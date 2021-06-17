@@ -61,11 +61,11 @@ func DeleteCat(name string) {
 //////////////////////// POSTS ////////////////////////
 
 // CreatePost permet de créer un Posts à partir des informations de bases
-func CreatePost(nickname_users string, title string, content string, category string) {
+func CreatePost(nickname_users string, bio_user string, title string, content string, category string) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, category, status, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Posts (title, content, creationDate, nickname_users, bio_users, category, status, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(title, content, creationDate, nickname_users, category, "Actif", 0, 0)
+	_, err = stmt.Exec(title, content, creationDate, nickname_users, bio_user, category, "Actif", 0, 0)
 	checkErr(err)
 }
 
@@ -87,11 +87,11 @@ func DeletePost(id_post int) {
 }
 
 // CreateComment permet de créer un Comments à partir des informations entrées en paramètre
-func CreateComment(nickname_users string, content string, post int) {
+func CreateComment(nickname_users string, biouser string, content string, post int) {
 	creationDate := time.Now()
-	stmt, err := db.Prepare("INSERT INTO Comments (content, creationDate, id_users, id_posts ) VALUES (?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO Comments (content, creationDate, id_users, bio_users, id_posts ) VALUES (?, ?, ?, ?, ?)")
 	checkErr(err)
-	_, err = stmt.Exec(content, creationDate, nickname_users, post)
+	_, err = stmt.Exec(content, creationDate, nickname_users, biouser, post)
 	checkErr(err)
 }
 
@@ -112,6 +112,12 @@ func Modifyemail(newemail string, email string) {
 	_, err = stmt.Exec(newemail, email)
 	checkErr(err)
 }
+func Modifybio(bio string, email string) {
+	stmt, err := db.Prepare("UPDATE Users SET biography = ? WHERE email = ?")
+	checkErr(err)
+	_, err = stmt.Exec(bio, email)
+	checkErr(err)
+}
 
 // registerBDD permet de créer un utilisateur en BDD à partir des informations récupérées sur la page
 func registerBDD(nickname string, email string, hashedpwd string, question string) {
@@ -126,5 +132,12 @@ func ChangepwdBDD(hashedpwd string, email string) {
 	stmt, err := db.Prepare("UPDATE Users SET hashedpwd = ? WHERE email = ?")
 	checkErr(err)
 	_, err = stmt.Exec(hashedpwd, email)
+	checkErr(err)
+}
+
+func DeleteAcc(id int) {
+	stmt, err := db.Prepare("DELETE FROM Users WHERE id = ?")
+	checkErr(err)
+	_, err = stmt.Exec(id)
 	checkErr(err)
 }

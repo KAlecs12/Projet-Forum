@@ -34,9 +34,11 @@ CREATE TABLE Posts (
 	likes INTEGER, 
 	dislikes INTEGER,
     nickname_users INTEGER,
+    bio_users       TEXT,
 	category TEXT,
 	status TEXT,
     CONSTRAINT fk_category FOREIGN KEY (category) REFERENCES Category(name),
+    CONSTRAINT fk_users_bio FOREIGN KEY (bio_users) REFERENCES Users(biography),
 	CONSTRAINT fk_users_nickname FOREIGN KEY (nickname_users) REFERENCES Users(nickname)
 );
 
@@ -56,8 +58,10 @@ CREATE TABLE Comments (
 	likes INTEGER, 
 	dislikes INTEGER,
 	id_users INTEGER,
+    bio_users  TEXT,
 	id_posts INTEGER,
 	CONSTRAINT fk_users_id FOREIGN KEY (id_users) REFERENCES Users(id),
+    CONSTRAINT fk_users_bio FOREIGN KEY (bio_users) REFERENCES Users(biography),
 	CONSTRAINT fk_posts_id FOREIGN KEY (id_posts) REFERENCES Posts(id)
 );
 

@@ -52,6 +52,7 @@ func main() {
 	http.HandleFunc("/", homehandler)
 	http.HandleFunc("/signin", signinhandler)
 	http.HandleFunc("/login", loginhandler)
+	http.HandleFunc("/login2", loginhandler2)
 	http.HandleFunc("/motdepasse-oublie", secretqhandler)
 	http.HandleFunc("/account", accounthandler)
 	http.HandleFunc("/post", posthandler)
@@ -61,7 +62,9 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/like", likehandler)
 	http.HandleFunc("/dislike", dislikehandler)
+	http.HandleFunc("/modifpost", modifpost)
 	http.HandleFunc("/supprpost", supprpost)
+	http.HandleFunc("/delaccount", delaccount)
 
 	http.Handle("/static/",
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -195,6 +198,33 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func loginhandler2(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "POST" {
+		LoginToBDD(w, r)
+		return
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// sur la page d'accueil, on récupère le template index.html
+	t, err := template.ParseFiles("./static/login.html", "./tmpl/footer.html")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+	content := ""
+	err = t.Execute(w, content)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+}
+
 func secretqhandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/motdepasse-oublie" {
@@ -226,6 +256,11 @@ func secretqhandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+type Account struct {
+	User Users
+	Post []Posts
+}
+
 func accounthandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/account" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
@@ -239,6 +274,9 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if r.FormValue("email") != "" {
 			emailModifBDD(w, r)
+		}
+		if r.FormValue("about") != "" {
+			BioModifBDD(w, r)
 		}
 
 		return
@@ -259,8 +297,7 @@ func accounthandler(w http.ResponseWriter, r *http.Request) {
 
 	id := getUserSession(w, r)
 
-	Users := infosU(id)
-	err = t.Execute(w, Users)
+	err = t.Execute(w, Account{User: infosU(id), Post: infosPosts()})
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
@@ -379,6 +416,39 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+}
+
+func supprpost(w http.ResponseWriter, r *http.Request) {
+
+	idpostint, err := strconv.Atoi(idpost)
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+	if r.Method == "POST" {
+
+		DeletePost(idpostint)
+		http.Redirect(w, r, "/", 302) // Ici pour la redirection, c'est en gros la page du post
+	}
+}
+
+func modifpost(w http.ResponseWriter, r *http.Request) {
+
+	idpostint, err := strconv.Atoi(idpost)
+	content := r.FormValue("content")
+	if err != nil {
+		fmt.Fprint(w, "Unable to load page.")
+		log.Fatal(err)
+	}
+
+	url := "/post?id=" + idpost
+
+	if r.Method == "POST" {
+
+		ModifiedPost(idpostint, content)
+		http.Redirect(w, r, url, 302) // Ici pour la redirection, c'est en gros la page du post
+	}
 }
 
 ///////////      FUNCTION CONNEXION       ///////////////
@@ -521,8 +591,9 @@ func postToBDD(w http.ResponseWriter, r *http.Request) {
 	id := getUserSession(w, r)
 
 	nickname := infosU(id)
+	bio_user := infosU(id)
 
-	CreatePost(nickname.Nickname, title, content, category)
+	CreatePost(nickname.Nickname, bio_user.Biography, title, content, category)
 
 	http.Redirect(w, r, "/", 302)
 }
@@ -547,6 +618,18 @@ func emailModifBDD(w http.ResponseWriter, r *http.Request) {
 	user := infosU(id)
 
 	Modifyemail(newemail, user.Email)
+
+	http.Redirect(w, r, "/account", 302)
+}
+
+func BioModifBDD(w http.ResponseWriter, r *http.Request) {
+
+	bio := r.FormValue("about")
+
+	id := getUserSession(w, r)
+	user := infosU(id)
+
+	Modifybio(bio, user.Email)
 
 	http.Redirect(w, r, "/account", 302)
 }
@@ -586,8 +669,9 @@ func commentToBDD(w http.ResponseWriter, r *http.Request, id_post int) {
 
 	content := r.FormValue("content")
 	nickname := infosU(id)
+	biouser := infosU(id)
 
-	CreateComment(nickname.Nickname, content, id_post)
+	CreateComment(nickname.Nickname, biouser.Biography, content, id_post)
 
 	http.Redirect(w, r, url, 302)
 }
@@ -628,17 +712,12 @@ func dislikehandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func supprpost(w http.ResponseWriter, r *http.Request) {
+func delaccount(w http.ResponseWriter, r *http.Request) {
 
-	idpostint, err := strconv.Atoi(idpost)
-	if err != nil {
-		fmt.Fprint(w, "Unable to load page.")
-		log.Fatal(err)
-	}
+	id := getUserSession(w, r)
 
 	if r.Method == "POST" {
-
-		DeletePost(idpostint)
+		DeleteAcc(id)
 		http.Redirect(w, r, "/", 302) // Ici pour la redirection, c'est en gros la page du post
 	}
 }

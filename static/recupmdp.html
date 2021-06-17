@@ -49,9 +49,9 @@
                 <form class="creation" method="POST">
 
                     <div class="row">
-                        <div class="col-25">
-                            <label for="email">Merci de répondre a ce formulaire, veuillez tout d'abord entrer l'e-mail relié a votre compte</label>
-                        </div>
+
+                            <label for="email" class="flex justify-center text-red-400">Merci de répondre a ce formulaire, veuillez tout d'abord entrer l'e-mail relié a votre compte</label>
+
 
                         <div class="col-75">
                             <input class="menuscroll" type="email" id="email" name="email"  placeholder="Indiquez votre adresse mail" required>
@@ -59,10 +59,10 @@
 
                     </div>
 
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="qsecrete">Quel est votre acteur, musicien ou artiste favori ?</label>
-                        </div>
+                    <div class="row mt-5">
+
+                            <label for="qsecrete" class="flex justify-center text-red-400">Quel est votre acteur, musicien ou artiste favori ?</label>
+
 
                         <div class="col-75">
                             <input class="menuscroll" type="text" id="qsecrete" name="qsecrete" minlength="3" placeholder="Indiquez votre réponse personelle" required>
@@ -71,13 +71,13 @@
                     </div>
 
                         <div class="row">
-                            <div class="col-25">
-                                <label for="subject">Entrer votre nouveau mot de passe</label>
-                            </div>
 
-                            <div class="col-75">
+                                <label for="subject" class="flex justify-center text-red-400">Entrer votre nouveau mot de passe</label>
+
+
+                            <div class="col-75 flex flex-col justify-center">
                                 <input class="menuscroll" type="password" id="subject" name="pwd" minlength="6" placeholder="Indiquez votre nouveau mot de passe" required>
-                                <label for="subject" class="text-gray-800">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
+                                <label for="subject" class="text-white">Note: Merci d'insérer un mot de passe (6 caractères minimum).</label>
                             </div>
 
                         </div>

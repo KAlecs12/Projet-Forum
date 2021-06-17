@@ -101425,6 +101425,10 @@ video {
     max-width: 42rem;
   }
 
+  .lg\:max-w-1\/2 {
+    max-width: 50%;
+  }
+
   .lg\:max-w-3xl {
     max-width: 48rem;
   }

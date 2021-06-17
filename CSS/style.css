@@ -386,6 +386,11 @@ a.button2 {
     margin: 1.563rem;
 }
 
+.date {
+    padding: 0.2rem;
+    border: 1px solid #bf8c40;
+
+}
 
 .category {
     border: 1px solid #000000;
@@ -413,6 +418,7 @@ a.button2 {
     list-style: none;
     background: #5e5e67;
 }
+
 
 .breadcrumb>li {
     display: inline-block;
@@ -712,9 +718,7 @@ a.button2 {
 }
 
 .g-iconmenu-icon2 {
-    background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    border-radius: 100%;
     text-align: center;
     margin: auto;
     width: 60px;
@@ -850,8 +854,12 @@ a {
     background: #f75353;
 }
 
-
-
+.acccolor {
+    background: #dad3e2;
+}
+.acccolor2 {
+    background: #dedae5;
+}
 
                                 /*  PARTIE 2  */
 

@@ -51,16 +51,29 @@
 
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="/post">Random Post</a>
+            {{if (gt .User.Id 0 )}}
+
+                <a href="/account">Mon compte</a>
+
+            {{end}}
+
+            {{ if (eq .User.Role "Admin")}}
+
+                <a href="/modifcat">Modifier une categorie</a>
+
+            {{ end }}
         </div>
 
         <!-- Use any element to open the sidenav -->
+
         <div class="start">
-            <div class="bigburger" onclick="openNav()">
-                <div class="burger"></div>
-                <div class="burger"></div>
-                <div class="burger"></div>
-            </div>
+            {{if (gt .User.Id 0 )}}
+                <div class="bigburger" onclick="openNav()">
+                    <div class="burger"></div>
+                    <div class="burger"></div>
+                    <div class="burger"></div>
+                </div>
+            {{ end }}
 
             <a href="/" class="title">
                 <img src="/static/img/logo.png" class="imgsize" alt="Astulpho">
@@ -108,24 +121,31 @@
                 <div class="flex flex-row justify-between mr-6">
                     <ol class="breadcrumb border rounded-md w-1/3 mt-8 float-left">
 
-                        <div class="flex justify-center underline"><div class="font-bold">{{.Posts.Category}} : </div>&nbsp; {{.Posts.Title}}</div>
+                        <div class="flex justify-center underline text-white"><div class="font-bold">{{.Posts.Category}} : </div>&nbsp; {{.Posts.Title}}</div>
 
                     </ol>
 
                     {{ if (eq .User.Role "Admin" )}}
+                        <div class="flex flex-row">
+                            {{ if (eq .User.Nickname .Posts.Nickname_users )}}
 
-                        <form method="post" action="/supprpost" class="flex items-center mt-7">
-                                <button type="submit" class=" relative  h-7 w-40  br-red flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Cloturer le post</button>
-                        </form>
+                                {{ template "modifpost"}}
 
+                            {{ end }}
+                            <form method="post" action="/supprpost" class="flex items-center mt-7">
+                                    <button type="submit" class=" relative  h-7 w-40  br-red flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Cloturer le post</button>
+                            </form>
+                        </div>
                     {{ else if (eq .User.Nickname .Posts.Nickname_users )}}
+                    <div class="flex flex-row">
+                        {{ template "modifpost"}}
 
                         <form method="post" action="/supprpost" class="flex items-center mt-7">
-                            <a class="button1">
-                                <button type="submit" class=" relative ml-10 h-6 w-16 mr-4 br-red flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Cloturer le post</button>
-                            </a>
-                        </form>
 
+                                <button type="submit" class=" relative ml-10 h-7 w-40 mr-4 br-red flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Cloturer le post</button>
+
+                        </form>
+                    </div>
                     {{ end }}
 
 
@@ -135,32 +155,48 @@
 
                         <div class=" flex flex-col postcontent pl-6 pr-6">
 
-                                <div class="text-red-700">{{.Posts.Nickname_users}}</div>
+                                <div class=" mt-2 text-white">{{.Posts.Nickname_users}}</div>
 
-                            <div class="auteur">Auteur du sujet </div>
+                            <div class="auteur text-red-700">Auteur du sujet </div>
                         </div>
 
-                        <div class="postcontent w-full pt-16 pb-16 pr-28 pl-28 ml-4">
-                            <div>{{.Posts.Content}}</div>
+                        <div class="postcontent w-full">
+
+                            {{ if (ne .Posts.ModificationDate "") }}
+                                <div class="date w-1/4 text-white">Date de Modification : {{ .Posts.ModificationDate }}</div>
+                            {{ else }}
+                                <div class="date w-1/4 text-white">Date de publication : {{ .Posts.CreationDate }}</div>
+                            {{ end }}
+                            <div class="text-left text-white float-left mb-7 mt-6 ml-16 w-full max-w-5xl">{{.Posts.Content}}</div>
+
+                            {{ if ( ne .Posts.Bio_users "") }}
+                                <hr noshade style=" margin-left: 15%; margin-top:11%;  width:70%; height:1px; margin-bottom: 1%; border:1px black; border-radius: 100px;">
+
+                                <div class="text-left text-white float-left mt-3 mb-4 ml-32 w-full max-w-5xl">{{.Posts.Bio_users}}</div>
+                            {{ end }}
                         </div>
 
                     </div>
 
                 </div>
-
+                <div class="flex flex-row">
+                 {{ $Post := .Posts}}
                 {{ if ( gt .User.Id 0 ) }}
 
-                <div class="flex flex-row">
+
                     <form method="POST" class="flex justify-center" action="/like">
-                        <button nametype="submit" class=" relative ml-10 h-6 w-16 mr-4 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Like</button>
+                        <button nametype="submit" class=" relative ml-10 h-6 w-24 mr-4 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{$Post.Like}} Like</button>
                     </form>
 
                     <form method="POST" class="flex justify-center" action="/dislike">
-                        <button nametype="submit" class=" relative h-6 w-16 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dislike</button>
+                        <button nametype="submit" class=" relative h-6 w-24 br-lblue flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{$Post.Dislike}} Dislike</button>
                     </form>
-                </div>
 
                 {{ end }}
+
+                <a onclick="getURL()" class="ml-6 cursor-pointer relative h-6 w-20 bg-green-500 flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Partager</a>
+                <input hidden id="copylink">
+                </div>
 
                 {{ $Posts := .Posts }}
                 {{ $Comment := .Comment }}
@@ -170,19 +206,40 @@
                         <div class="body-content bg-comment">
                             <div class="flex justify-between">
 
-                                <div class=" flex flex-col postcontent pl-6 pr-6">
+                                {{ if ( eq $Comments.NicknameUsers $Posts.Nickname_users) }}
+                                    <div class=" flex flex-col postcontent pl-12 pr-12">
 
-                                    <div class="text-white">{{$Comments.NicknameUsers}}</div>
+                                        <div class="mt-2 text-white">{{$Comments.NicknameUsers}}</div>
 
-                                    {{ if ( eq $Comments.NicknameUsers $Posts.Nickname_users) }}
-                                    <div class="auteur">Auteur du sujet </div>
+
+                                        <div class="auteur text-red-700">Auteur du sujet </div>
+
+
+                                    </div>
+                                {{ else }}
+
+                                    <div class=" flex flex-col postcontent pl-20 pr-20 h-44">
+
+                                        <div class="mt-2 text-white">{{$Comments.NicknameUsers}}</div>
+
+
+                                    </div>
+
+                                {{ end}}
+                                <div class="postcontent w-full ml-4 text-white">
+                                    {{ if (ne $Comments.ModificationDate "") }}
+                                        <div class="date w-1/4 text-white">Date de Modification : {{ $Comments.ModificationDate }}</div>
+                                    {{ else }}
+                                        <div class="date w-1/4 text-white">Date de publication : {{ $Comments.CreationDate }}</div>
+                                    {{ end }}
+                                    <div class="text-left text-white mb-7 float-left mt-6 ml-16 w-full max-w-5xl">{{$Comments.Content}}</div>
+
+                                    {{ if ( ne $Comments.BioUsers "") }}
+                                        <hr noshade style=" margin-left: 15%; margin-top:11%;  width:70%; height:1px; margin-bottom: 1%; border:1px black; border-radius: 100px;">
+
+                                        <div class="text-left text-white float-left mt-3 mb-4 ml-32 w-full max-w-5xl">{{$Comments.BioUsers}}</div>
                                     {{ end }}
 
-                                </div>
-
-                                <div class="postcontent w-full ml-4">
-                                    <div class="">{{ $Comments.CreationDate }}</div>
-                                    <div>{{$Comments.Content}}</div>
                                 </div>
 
 
@@ -193,19 +250,15 @@
                     {{ end }}
                 {{ end }}
 
-                <button onclick="getURL()">Partager</button>
-
-                <input hidden id="copylink">
-
                 {{ if ( gt .User.Id 0 ) }}
 
                     <form class="body-content bg-comment" method="post">
                         <div class="row textbox">
                             <div class="font-medium text-yellow-600 ">
-                                <label for="content">Repondre au sujet :</label>
+                                <label for="content">Repondre au sujet en tant que {{.User.Nickname}} :</label>
                             </div>
-                            <div class="col-75 ml-4">
-                                <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class="resize-none border h-52 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
+                            <div class="col-75 ml-4 text-white">
+                                <textarea id="content" name="content" autofocus spellcheck="true" rows="3" class=" text-black resize-none border h-52 shadow-sm focus:ring-indigo-500  bg-gray-50 focus:border-indigo-500 mt-1 block menuscroll sm:text-sm border-gray-300 rounded-md" placeholder="Que voulez-vous dire ?" required></textarea>
                             </div>
                         </div>
 
@@ -215,9 +268,7 @@
 
                     </form>
 
-                {{ end }}
-
-                {{ if ( eq .User.Id 0 ) }}
+                {{ else if ( eq .User.Id 0 ) }}
 
                 <div class="body-content bg-comment">
                     <div class="row textbox">

@@ -141,11 +141,11 @@
     }
 </style>
 
-<button class="float-right mr-6 pr-2 pl-2" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+<button class="float-right mr-6 pr-2 pl-2" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Connexion</button>
 
 
     <div id="id01" class="modal">
-            <form class="modal-content animate" method="post">
+            <form class="modal-content animate" method="post" action="/login2">
                 <div class="imgcontainer">
                     <h1 class="mt-6 text-center text-3xl font-muli text-yellow-400">Se connecter</h1>
                     <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
@@ -188,6 +188,170 @@
         }
     }
 </script>
+
+{{end}}
+
+
+
+{{define "modifpost"}}
+
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif; color: white}
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            background: #202324;
+            border: 1px solid rgb(62, 68, 70);;
+            box-sizing: border-box;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            text-decoration: none;
+            color: white;
+            margin-left: 30px;
+            width: 150px;
+            height: 30px;
+            border: 2px solid #FFFFFF;
+            border-radius: 100px;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+
+        /* Center the image and position the close button */
+        .imgcontainer {
+            text-align: center;
+            margin: 0px 0 0px 0;
+            position: relative;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        span.psw {
+            float: right;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            z-index: 100;
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* Modal Content/Box */
+
+        .modal-content {
+            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* The Close Button (x) */
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: red;
+            cursor: pointer;
+        }
+
+        /* Add Zoom Animation */
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {-webkit-transform: scale(0)}
+            to {-webkit-transform: scale(1)}
+        }
+
+        @keyframes animatezoom {
+            from {transform: scale(0)}
+            to {transform: scale(1)}
+        }
+
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+        }
+    </style>
+
+    <a class="flex items-center mt-7">
+        <button type="submit" onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class=" relative ml-10 h-7 w-50 mr-4 br-green flex justify-center px-4 border border-transparent font-medium rounded-md text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Changer le post</button>
+    </a>
+
+
+    <div id="id01" class="modal">
+        <form class="modal-content bg-comment animate" method="post" action="/modifpost">
+            <div class="imgcontainer">
+                <h1 class="mt-6 text-center text-3xl font-muli text-yellow-400">Changer le contenu du post</h1>
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+            </div>
+
+            <div class="container">
+
+                    <div class="mt-1">
+                        <label for="about" class="block text-sm font-medium ">
+                            Contenu :
+                        </label>
+                            <textarea id="about" name="content" rows="3" class="text-black border shadow-sm focus:ring-indigo-500 bg-gray-50 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" ></textarea>
+
+                    </div>
+
+
+            </div>
+
+            <div class="container">
+
+                <button type="submit">Changer le post</button>
+
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
 {{end}}
 
