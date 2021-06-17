@@ -1,3 +1,4 @@
+{{ if (eq .Id 0)}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,3 +122,100 @@
 
 </body>
 </html>
+{{ else }}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Page introuvable</title>
+        <link href="/CSS/style.css" rel="stylesheet"/>
+        <link href="/CSS/tailwind.css" rel="stylesheet"/>
+
+    </head>
+
+    <style>
+
+        html {
+            background: #6b6770;
+        }
+
+        .error {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            font-size: 130px;
+            font-weight: 700;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            top: 150px;
+            bottom: 150px;
+        }
+
+        .error404 {
+            margin-right: 50%;
+            color: #e5b040;
+            font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+            text-shadow: -2px 0 #1f1f1f;
+        }
+
+        .colorerror{
+            text-shadow: -8px 0px 20px #1f1f1f;
+            margin-right: 27%;
+            font-size: 20px;
+            color: #b9bbbe;
+            line-height: 35px;
+            text-align: left;
+            font-weight: 300;
+        }
+
+        a {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+    </style>
+
+    <body>
+
+
+
+    <!--    BODY     -->
+    <br>
+    <ol class="breadcrumb mt-0">
+
+        <span class="glyphicon glyphicon-home hasTooltip" aria-hidden="true"></span>
+        <a class="item" href="/">Forum</a>
+
+        <li class="item">&nbsp; ? &nbsp; </li>
+        <li>
+
+            <a class="item" href="/login">Autorisation refusée</a>
+        </li>
+
+    </ol>
+
+    <!--    PARTIE ERROR   -->
+
+    <div class="error">
+
+        <div class="error404 ml-56 pl-56"> ERREUR D'AUTHORISATION</div>
+        <div class="colorerror">
+            Mince ! <br>
+            Vous vous êtes perdu ?<br>
+            Malheureusement, il semblerait que la page demandé ne soit pas accessible ou inexistante ! :O<br>
+            La seule chose que je peux vous proposer c'est d'essayer de cliquer sur ces liens ci-dessous, ils pourraient vous guider vers la bonne voie.
+
+            <div>
+                <br>
+                <a href="/">→ &nbsp; Accueil</a><br>
+                <a href="/account">→ &nbsp; Profil</a>
+            </div>
+        </div>
+
+
+    </div>
+
+    </body>
+    </html>
+{{ end }}

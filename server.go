@@ -159,7 +159,9 @@ func signinhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := ""
+	id := getUserSession(w, r)
+
+	content := infosU(id)
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
@@ -189,7 +191,9 @@ func loginhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := ""
+	id := getUserSession(w, r)
+
+	content := infosU(id)
 	err = t.Execute(w, content)
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
@@ -388,6 +392,11 @@ func posthandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+type Create struct {
+	Content []Category
+	User    Users
+}
+
 func postcreation(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/postcreation" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
@@ -409,8 +418,10 @@ func postcreation(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
 	}
-	content := infosCat()
-	err = t.Execute(w, content)
+
+	id := getUserSession(w, r)
+
+	err = t.Execute(w, Create{Content: infosCat(), User: infosU(id)})
 	if err != nil {
 		fmt.Fprint(w, "Unable to load page.")
 		log.Fatal(err)
